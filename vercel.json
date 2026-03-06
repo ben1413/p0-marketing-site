@@ -1,0 +1,10 @@
+{
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/platform", "destination": "/platform/index.html" },
+    { "source": "/primitives", "destination": "/primitives/index.html" },
+    { "source": "/platform.html", "destination": "/platform" }
+  ]
+}

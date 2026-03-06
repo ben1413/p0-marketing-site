@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Project0 — Infrastructure for the multi-human, multi-agent workforce.</title>
+<meta name="description" content="The control plane for AI systems that must be accountable, coordinated, and durable. Built for the workforce where humans and agents work together.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #050505;
+  --near-black: #0a0a0a;
+  --dark: #0f0f0f;
+  --card: #131313;
+  --card-2: #181818;
+  --border: rgba(255,255,255,0.055);
+  --border-med: rgba(255,255,255,0.1);
+  --border-bright: rgba(255,255,255,0.22);
+  --white: #ffffff;
+  --gray-1: #e0e0e0;
+  --gray-2: #808080;
+  --gray-3: #404040;
+  --gray-4: #202020;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.7), 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.11);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 100px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scroll-container {
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============ ANIMATIONS ============ */
+.anim {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.anim.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.d1 { transition-delay: 0.05s; }
+.d2 { transition-delay: 0.12s; }
+.d3 { transition-delay: 0.19s; }
+.d4 { transition-delay: 0.26s; }
+.d5 { transition-delay: 0.33s; }
+
+/* ============ SCROLL SNAP ============ */
+.snap-section {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+/* ============ NAV ============ */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  height: 58px;
+  padding: 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5,5,5,0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
+  font-feature-settings: "ss01";
+}
+.nav-right { display: flex; align-items: center; gap: 32px; }
+.nav-link { font-size: 13px; font-weight: 450; color: var(--gray-2); text-decoration: none; transition: color 0.15s; }
+.nav-link:hover { color: var(--white); }
+.nav-cta {
+  font-size: 12px; font-weight: 600; color: var(--white); text-decoration: none;
+  background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
+  padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
+}
+.nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
+
+/* ============ DOT NAV ============ */
+.dots {
+  position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
+  z-index: 150; display: flex; flex-direction: column; gap: 10px; align-items: center;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--gray-3);
+  cursor: pointer; transition: all 0.25s; border: none; padding: 0;
+}
+.dot.active { background: var(--white); box-shadow: 0 0 8px rgba(255,255,255,0.45); transform: scale(1.35); }
+.dot:hover:not(.active) { background: var(--gray-2); }
+
+/* ============ SCROLL ARROW ============ */
+.next-btn {
+  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  cursor: pointer; z-index: 10; opacity: 0.35; transition: opacity 0.2s;
+  background: none; border: none; color: inherit; gap: 5px;
+}
+.next-btn:hover { opacity: 0.8; }
+.next-btn svg { animation: bob 2.2s ease-in-out infinite; }
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+
+/* ============ LAYOUT ============ */
+.inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
+.label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.22em; color: var(--gray-3); text-transform: uppercase;
+  margin-bottom: 28px; display: block;
+}
+
+/* ============ LEDGER BADGE ============ */
+.ledger-badge {
+  position: fixed; bottom: 24px; right: 24px; z-index: 190;
+  background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius);
+  padding: 11px 16px; display: flex; align-items: center; gap: 10px;
+  box-shadow: var(--shadow-card); text-decoration: none; transition: all 0.2s;
+}
+.ledger-badge:hover { border-color: var(--border-bright); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; box-shadow: 0 0 6px rgba(74,222,128,0.6); }
+.badge-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-2); }
+.badge-name { font-size: 12px; font-weight: 700; color: var(--white); }
+
+/* ============ HERO ============ */
+#hero { background: var(--black); }
+.hero-inner { max-width: 820px; padding-top: 20px; }
+.hero-h1 {
+  font-size: clamp(36px, 4.8vw, 68px);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.032em;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+.hero-h1 span { color: var(--gray-2); }
+.hero-sub {
+  font-size: clamp(15px, 1.6vw, 18px);
+  font-weight: 400;
+  color: var(--gray-2);
+  max-width: 540px;
+  line-height: 1.75;
+  margin-bottom: 40px;
+}
+.hero-sub em { color: var(--gray-1); font-style: normal; font-weight: 500; }
+.hero-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--white); text-decoration: none; background: var(--card-2);
+  border: 1px solid var(--border-med); border-radius: var(--radius-sm);
+  padding: 12px 22px; box-shadow: var(--shadow-card); transition: all 0.15s;
+}
+.hero-btn:hover { background: var(--white); color: var(--black); border-color: transparent; }
+
+/* ============ REALITY ANCHOR ============ */
+#reality { background: var(--near-black); }
+.reality-h {
+  font-size: clamp(22px, 2.8vw, 38px); font-weight: 800;
+  letter-spacing: -0.025em; color: var(--white); margin-bottom: 10px; line-height: 1.1;
+}
+.reality-sub { font-size: 15px; color: var(--gray-2); margin-bottom: 44px; max-width: 460px; line-height: 1.7; }
+.reality-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+.reality-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 28px 24px; box-shadow: var(--shadow-card); transition: all 0.2s; position: relative; overflow: hidden;
+}
+.reality-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--border-med); border-radius: var(--radius) var(--radius) 0 0;
+}
+.reality-card.live::before { background: #4ade80; }
+.reality-card:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.rc-name { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
+.rc-desc { font-size: 13px; color: var(--gray-2); line-height: 1.6; margin-bottom: 14px; }
+.rc-status {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gray-3);
+  border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 4px 11px;
+  display: inline-block; background: var(--dark);
+}
+.rc-status.live { color: #4ade80; border-color: rgba(74,222,128,0.25); background: rgba(74,222,128,0.06); }
+
+/* ============ THESIS ============ */
+#thesis { background: var(--black); }
+.thesis-statement {
+  font-size: clamp(28px, 3.8vw, 54px); font-weight: 800;
+  line-height: 1.08; letter-spacing: -0.03em; color: var(--white);
+  max-width: 780px; margin-bottom: 48px;
+}
+.thesis-statement em { color: var(--gray-2); font-style: normal; }
+.compare-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow-card); border: 1px solid var(--border);
+}
+.compare-col { padding: 36px 32px; }
+.compare-col.bad { background: var(--card); }
+.compare-col.good { background: var(--card-2); border-left: 1px solid var(--border); }
+.compare-col-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 18px;
+}
+.compare-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.compare-col li { font-size: 13px; padding-left: 16px; position: relative; line-height: 1.5; color: var(--gray-2); }
+.compare-col li::before { content: '-'; position: absolute; left: 0; color: var(--gray-3); }
+.compare-col.good li { color: var(--gray-1); }
+.compare-col.good li::before { color: var(--gray-3); }
+.compare-close {
+  grid-column: 1/-1; padding: 24px 32px;
+  background: var(--dark); border-top: 1px solid var(--border);
+}
+.compare-close p { font-size: 14px; font-weight: 600; color: var(--white); line-height: 1.6; }
+.compare-close p + p { margin-top: 2px; color: var(--gray-2); font-weight: 400; font-size: 13px; }
+
+/* ============ UNGOVERNED — FULL STAGE ============ */
+#ungoverned { background: var(--near-black); }
+.ungoverned-inner { max-width: 820px; }
+.ungoverned-q {
+  font-size: clamp(36px, 5.5vw, 76px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.038em; color: var(--white); margin-bottom: 32px;
+}
+.ungoverned-q .dim { color: var(--gray-3); }
+.ungoverned-body { font-size: 16px; color: var(--gray-2); max-width: 520px; line-height: 1.85; }
+
+/* ============ PLATFORM ============ */
+#platform { background: var(--near-black); }
+.platform-h { font-size: clamp(22px, 2.8vw, 38px); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 8px; line-height: 1.1; }
+.platform-sub { font-size: 15px; color: var(--gray-2); max-width: 440px; line-height: 1.7; margin-bottom: 36px; }
+.stack { display: flex; flex-direction: column; gap: 8px; }
+
+.stack-core {
+  background: var(--white); border-radius: var(--radius); padding: 26px 28px;
+  display: grid; grid-template-columns: 190px 1fr auto; align-items: center;
+  box-shadow: 0 4px 32px rgba(255,255,255,0.09), 0 0 0 1px rgba(255,255,255,0.85);
+  transition: all 0.2s;
+}
+.stack-core:hover { box-shadow: 0 8px 48px rgba(255,255,255,0.14), 0 0 0 1px white; transform: translateX(2px); }
+.core-badge {
+  font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(0,0,0,0.35); background: rgba(0,0,0,0.06);
+  border-radius: var(--radius-pill); padding: 3px 9px; display: inline-block; margin-bottom: 5px;
+}
+.core-name { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #000; }
+.core-desc { font-size: 13px; color: #333; line-height: 1.65; padding: 0 28px; }
+.core-desc strong { color: #000; font-weight: 600; }
+.core-pill {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #888; background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.1); border-radius: var(--radius-pill); padding: 5px 12px; white-space: nowrap;
+}
+
+.stack-row {
+  display: grid; grid-template-columns: 190px 1fr auto; align-items: center;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px 28px; box-shadow: var(--shadow-card); transition: all 0.2s;
+}
+.stack-row:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); transform: translateX(2px); }
+.stack-name { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); }
+.stack-desc { font-size: 13px; color: var(--gray-2); line-height: 1.6; padding: 0 28px; }
+.stack-desc strong { color: var(--white); font-weight: 600; }
+.stack-pill {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gray-3); white-space: nowrap;
+  background: var(--dark); border: 1px solid var(--border); border-radius: var(--radius-pill);
+  padding: 5px 12px; box-shadow: var(--shadow-card);
+}
+.stack-pill.live { color: var(--white); background: rgba(255,255,255,0.07); border-color: var(--border-bright); }
+.ecosystem-bar {
+  margin-top: 4px; padding: 16px 22px; background: var(--dark); border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 13px; color: var(--gray-2); line-height: 1.7; box-shadow: var(--shadow-card);
+}
+.ecosystem-bar strong { color: var(--white); font-weight: 600; }
+
+/* ============ VISION ============ */
+#vision { background: var(--black); }
+.vision-num {
+  font-size: clamp(64px, 9.5vw, 128px); font-weight: 800;
+  line-height: 0.92; letter-spacing: -0.045em; color: var(--white); margin-bottom: 20px;
+}
+.vision-sub { font-size: 16px; color: var(--gray-2); max-width: 500px; line-height: 1.8; margin-bottom: 10px; }
+.vision-note { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 40px; }
+.wf-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.wf-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 26px 24px; box-shadow: var(--shadow-card); cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.16,1,0.3,1); position: relative; overflow: hidden; user-select: none;
+}
+.wf-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: transparent; transition: background 0.28s;
+}
+.wf-card.active { background: var(--card-2); border-color: var(--border-bright); box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+.wf-card.active::before { background: var(--white); }
+.wf-card:hover:not(.active) { border-color: var(--border-med); transform: translateY(-1px); }
+.wf-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 10px; }
+.wf-num { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 10px; letter-spacing: -0.02em; }
+.wf-desc { font-size: 13px; color: var(--gray-2); line-height: 1.7; }
+
+/* ============ MOAT ============ */
+#moat { background: var(--near-black); }
+.moat-h { font-size: clamp(24px, 3.2vw, 44px); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.1; margin-bottom: 28px; }
+.moat-h .dim { color: var(--gray-3); }
+.moat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 32px; }
+.moat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 28px 24px; box-shadow: var(--shadow-card); transition: all 0.2s;
+}
+.moat-card:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); }
+.moat-card-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 14px; display: block; }
+.moat-card-items { display: flex; flex-direction: column; gap: 8px; }
+.moat-card-item { font-size: 13px; color: var(--gray-2); padding-left: 16px; position: relative; line-height: 1.5; }
+.moat-card-item::before { content: '-'; position: absolute; left: 0; color: var(--gray-3); }
+.moat-card-item.keep { color: var(--gray-1); }
+.moat-key { font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.7; max-width: 600px; }
+.moat-key-sub { font-size: 13px; color: var(--gray-2); line-height: 1.8; margin-top: 10px; max-width: 560px; }
+
+/* ============ MANIFESTO ============ */
+#manifesto { background: var(--black); }
+.manifesto-inner { max-width: 860px; margin: 0 auto; padding: 60px 52px; text-align: center; }
+.manifesto-q { font-size: clamp(32px, 5.2vw, 68px); font-weight: 800; letter-spacing: -0.04em; color: var(--white); line-height: 1.05; margin-bottom: 36px; }
+.manifesto-body { font-size: 15px; color: var(--gray-2); max-width: 500px; margin: 0 auto 10px; line-height: 1.85; }
+.manifesto-land { font-size: 18px; font-weight: 700; color: var(--white); margin-top: 28px; letter-spacing: -0.01em; line-height: 1.6; }
+
+/* ============ CTA ============ */
+#cta { background: var(--near-black); }
+.cta-inner { max-width: 580px; margin: 0 auto; text-align: center; padding: 60px 52px; }
+.cta-h { font-size: clamp(26px, 3.8vw, 50px); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.1; margin-bottom: 14px; }
+.cta-p { font-size: 15px; color: var(--gray-2); margin-bottom: 36px; line-height: 1.8; max-width: 360px; margin-left: auto; margin-right: auto; }
+.cta-link {
+  display: inline-block; font-size: 17px; font-weight: 700; color: var(--white); text-decoration: none;
+  background: var(--card-2); border: 1px solid var(--border-bright); border-radius: var(--radius);
+  padding: 16px 32px; box-shadow: var(--shadow-card); transition: all 0.15s;
+}
+.cta-link:hover { background: var(--white); color: var(--black); border-color: transparent; box-shadow: 0 8px 32px rgba(255,255,255,0.12); }
+
+/* ============ DECISION LIFECYCLE CARD ============ */
+#lifecycle { background: var(--black); }
+.decision-diagram {
+  background: var(--near-black);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+.decision-diagram::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+}
+.diag-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-3);
+  margin-bottom: 32px; align-self: flex-start;
+}
+.diag-entry-row {
+  display: flex; gap: 10px; align-items: center; margin-bottom: 0;
+}
+.diag-entry {
+  background: var(--card); border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm); padding: 10px 18px;
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  color: var(--gray-1); letter-spacing: 0.04em;
+  box-shadow: var(--shadow-card);
+}
+.diag-entry-sep { font-family: var(--mono); font-size: 12px; color: var(--gray-3); }
+.diag-down {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  padding: 4px 0; color: var(--gray-3);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+}
+.diag-down-line { width: 1px; height: 24px; background: var(--border-med); }
+.diag-down-arrow { color: var(--gray-3); font-size: 10px; margin-top: -4px; }
+.diag-node {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 260px;
+}
+.diag-node-box {
+  width: 100%; background: var(--card-2); border: 1px solid var(--border-bright);
+  border-radius: var(--radius); padding: 16px 24px;
+  text-align: center; box-shadow: var(--shadow-hover);
+  position: relative;
+}
+.diag-node-box.promote {
+  background: var(--white); border-color: transparent;
+  box-shadow: 0 4px 24px rgba(255,255,255,0.12), 0 0 0 1px rgba(255,255,255,0.6);
+}
+.diag-node-name {
+  font-family: var(--mono); font-size: 13px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--white);
+}
+.diag-node-box.promote .diag-node-name { color: var(--black); }
+.diag-node-sub {
+  font-size: 11px; color: var(--gray-2); margin-top: 4px;
+  font-family: var(--mono); letter-spacing: 0.04em;
+}
+.diag-node-box.promote .diag-node-sub { color: rgba(0,0,0,0.45); }
+.diag-split {
+  display: flex; gap: 40px; align-items: flex-start; width: 100%;
+  justify-content: center; padding-top: 4px;
+}
+.diag-split-branch { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 180px; }
+.diag-split-box {
+  width: 100%; background: var(--card); border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm); padding: 12px 16px; text-align: center;
+  box-shadow: var(--shadow-card);
+}
+.diag-split-name { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--gray-1); letter-spacing: 0.06em; }
+.diag-split-sub { font-size: 11px; color: var(--gray-3); margin-top: 3px; font-family: var(--mono); }
+.diag-caption {
+  font-size: 12px; color: var(--gray-3); text-align: center;
+  max-width: 400px; line-height: 1.7; margin-top: 28px;
+  font-style: italic;
+}
+
+/* ============ PLATFORM ARCHITECTURE DIAGRAM ============ */
+.arch-diagram {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 36px 32px;
+  box-shadow: var(--shadow-card); margin-top: 12px; position: relative; overflow: hidden;
+}
+.arch-diagram::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--border-med), transparent);
+}
+.arch-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 24px;
+}
+.arch-core-row {
+  background: var(--white); border-radius: var(--radius-sm); padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; box-shadow: 0 2px 12px rgba(255,255,255,0.08);
+}
+.arch-core-name { font-family: var(--mono); font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #000; }
+.arch-core-sub { font-size: 11px; color: rgba(0,0,0,0.45); font-family: var(--mono); }
+.arch-connectors {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  position: relative; margin-bottom: 0;
+}
+.arch-connectors::before {
+  content: ''; position: absolute; top: 0; left: 20%; right: 20%; height: 1px;
+  background: var(--border-med);
+}
+.arch-surface-col {
+  display: flex; flex-direction: column; align-items: center; gap: 0; flex: 1;
+}
+.arch-vert-line { width: 1px; height: 20px; background: var(--border-med); }
+.arch-surface {
+  background: var(--dark); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
+  padding: 10px 14px; text-align: center; box-shadow: var(--shadow-card); width: 100%; margin: 0 4px;
+}
+.arch-surface-name { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); }
+.arch-surface-sub { font-size: 10px; color: var(--gray-3); margin-top: 3px; font-family: var(--mono); }
+.arch-surface.live { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
+.arch-surface.live .arch-surface-name { color: #4ade80; }
+
+/* ============ FOOTER ============ */
+footer {
+  padding: 28px 52px;
+  border-top: 1px solid var(--border); display: flex;
+  align-items: center; justify-content: space-between; background: var(--black);
+}
+.footer-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); display: block; margin-bottom: 3px; }
+.footer-tag { font-size: 12px; color: var(--gray-3); font-style: italic; }
+.footer-links { display: flex; gap: 24px; align-items: center; }
+.footer-link { font-size: 12px; color: var(--gray-3); text-decoration: none; transition: color 0.15s; }
+.footer-link:hover { color: var(--white); }
+.footer-infra { font-size: 11px; color: var(--gray-4); }
+
+@media (max-width: 860px) {
+  nav { padding: 0 20px; }
+  .nav-right { gap: 20px; }
+  .inner { padding: 80px 20px 60px; }
+  .reality-grid { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .stack-core, .stack-row { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
+  .core-desc, .stack-desc { padding: 0; }
+  .wf-grid { grid-template-columns: 1fr; }
+  .moat-grid { grid-template-columns: 1fr; }
+  .manifesto-inner, .cta-inner { padding: 60px 20px; }
+  footer { flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px 20px; }
+  .dots, .ledger-badge { display: none; }
+  .decision-diagram { padding: 28px 20px; }
+  .diag-entry-row { flex-wrap: wrap; gap: 8px; }
+  .diag-node { min-width: 0; width: 100%; max-width: 280px; }
+  .diag-split { flex-direction: column; gap: 12px; width: 100%; max-width: 280px; }
+  .diag-split-branch { min-width: 0; width: 100%; }
+  .arch-connectors { flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .arch-connectors::before { display: none; }
+  .arch-surface-col { flex: 1 1 45%; min-width: 120px; }
+}
+
+@media (max-width: 600px) {
+  nav { padding: 0 16px; height: 52px; }
+  .nav-logo { font-size: 11px; letter-spacing: 0.1em; }
+  .nav-right { gap: 16px; }
+  .nav-link { font-size: 12px; }
+  .nav-cta { font-size: 11px; padding: 8px 12px; }
+  .inner { padding: 72px 16px 48px; }
+  .hero-h1 { font-size: clamp(28px, 8vw, 48px); }
+  .hero-sub { font-size: 15px; }
+  .hero-btn { padding: 14px 20px; font-size: 11px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  .next-btn { bottom: 20px; padding: 12px; min-height: 44px; min-width: 44px; }
+  .reality-card, .moat-card, .wf-card { padding: 20px 18px; }
+  .thesis-statement { font-size: clamp(22px, 6vw, 36px); }
+  .ungoverned-q { font-size: clamp(28px, 8vw, 48px); }
+  .platform-h { font-size: clamp(20px, 5.5vw, 32px); }
+  .vision-num { font-size: clamp(48px, 12vw, 80px); }
+  .manifesto-q { font-size: clamp(26px, 7vw, 42px); }
+  .cta-h { font-size: clamp(22px, 6vw, 36px); }
+  .cta-link { padding: 14px 24px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  .manifesto-inner, .cta-inner { padding: 48px 16px; }
+  footer { padding: 20px 16px; gap: 12px; }
+  .footer-links { flex-wrap: wrap; gap: 16px; }
+  .decision-diagram { padding: 24px 16px; }
+  .arch-connectors { flex-direction: column; }
+  .arch-surface-col { flex: none; width: 100%; }
+}
+
+@media (max-width: 860px) {
+  @supports (padding: max(0px)) {
+    .next-btn { bottom: max(20px, env(safe-area-inset-bottom)); }
+    .ledger-badge { right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); }
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Project0</a>
+  <div class="nav-right">
+    <a href="/platform" class="nav-link">Platform</a>
+    <a href="/primitives" class="nav-link">Primitives</a>
+    <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+  </div>
+</nav>
+
+<!-- DOT NAV -->
+<div class="dots" id="dots">
+  <button class="dot active" data-t="hero" aria-label="Go to Hero"></button>
+  <button class="dot" data-t="reality" aria-label="Go to Reality"></button>
+  <button class="dot" data-t="thesis" aria-label="Go to Thesis"></button>
+  <button class="dot" data-t="ungoverned" aria-label="Go to Ungoverned"></button>
+  <button class="dot" data-t="lifecycle" aria-label="Go to Decision Lifecycle"></button>
+  <button class="dot" data-t="vision" aria-label="Go to Vision"></button>
+  <button class="dot" data-t="moat" aria-label="Go to Moat"></button>
+  <button class="dot" data-t="manifesto" aria-label="Go to Manifesto"></button>
+  <button class="dot" data-t="cta" aria-label="Go to CTA"></button>
+</div>
+
+<!-- LEDGER BADGE -->
+<a href="https://projectledger.io" class="ledger-badge" target="_blank" rel="noopener noreferrer">
+  <span class="live-dot"></span>
+  <span class="badge-label">Live now</span>
+  <span class="badge-name">ProjectLedger ↗</span>
+</a>
+
+<main class="scroll-container">
+<!-- ===== HERO ===== -->
+<section class="snap-section" id="hero">
+  <div class="inner">
+    <div class="hero-inner">
+      <p class="label anim">Governance Infrastructure</p>
+      <h1 class="hero-h1 anim d1">Infrastructure<br>for multi-human,<br>multi-agent systems.</h1>
+      <p class="hero-sub anim d2">The control plane for AI systems that must be <em>accountable, coordinated, and durable.</em> Built for the workforce where humans and agents work together.</p>
+      <p class="hero-sub anim d3" style="font-size:14px; color: var(--gray-3); margin-bottom:40px;">Powerful AI is inevitable. Trustworthy AI requires rails.</p>
+      <a href="mailto:hello@project0.io" class="hero-btn anim d4">If you're building at this layer — let's talk →</a>
+    </div>
+  </div>
+  <button class="next-btn" data-next="reality" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== REALITY ANCHOR ===== -->
+<section class="snap-section" id="reality">
+  <div class="inner">
+    <span class="label anim">Already Running</span>
+    <h2 class="reality-h anim d1">This is not a concept.<br>This is infrastructure.</h2>
+    <p class="reality-sub anim d2">Three systems. One control plane. The first purpose-built stack for organizations where humans and agents work together.</p>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
+      <a href="/platform" class="hero-btn anim d3" style="display: inline-flex;">View the stack →</a>
+      <a href="/primitives" class="hero-btn anim d3" style="display: inline-flex; background: transparent; border-color: var(--border);">View primitives →</a>
+    </div>
+    <div class="reality-grid">
+      <div class="reality-card live anim d2">
+        <p class="rc-name">ProjectLedger</p>
+        <p class="rc-desc">Append-only, tamper-evident system of record for AI-assisted decisions. Sealed at the moment of commitment. Independently verifiable.</p>
+        <span class="rc-status live">Live Now</span>
+      </div>
+      <div class="reality-card anim d3">
+        <p class="rc-name">ProjectCore</p>
+        <p class="rc-desc">API-only control plane. Promote, Authority, Memory — the three primitives that power every surface on the platform.</p>
+        <span class="rc-status">In Development</span>
+      </div>
+      <div class="reality-card anim d4">
+        <p class="rc-name">Spines</p>
+        <p class="rc-desc">80% of a compliant AI build — auth, billing, multi-tenant isolation, governance capture, ledger hooks. Tech-agnostic rails.</p>
+        <span class="rc-status">Platform Layer</span>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" data-next="thesis" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== THESIS ===== -->
+<section class="snap-section" id="thesis">
+  <div class="inner">
+    <span class="label anim">The Problem</span>
+    <p class="thesis-statement anim d1">AI is being deployed as if it were a co-worker. <em>Most systems don't meet the baseline.</em></p>
+    <div class="compare-grid anim d2">
+      <div class="compare-col bad">
+        <p class="compare-col-label">Stateless AI</p>
+        <ul>
+          <li>Output without continuity</li>
+          <li>Confidence without accountability</li>
+          <li>Speed without memory</li>
+          <li>Resets every interaction</li>
+          <li>Collapses under operational load</li>
+        </ul>
+      </div>
+      <div class="compare-col good">
+        <p class="compare-col-label">AI as a co-worker</p>
+        <ul>
+          <li>Continuity across time</li>
+          <li>Clear responsibility boundaries</li>
+          <li>Can be audited</li>
+          <li>Can be corrected without starting from zero</li>
+          <li>Accumulates institutional memory</li>
+        </ul>
+      </div>
+      <div class="compare-close">
+        <p>A good human colleague carries context forward, understands their role, and can explain what they did and why.</p>
+        <p>That is the baseline we already enforce in healthy organizations. Most AI doesn't meet it.</p>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" data-next="ungoverned" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== UNGOVERNED — FULL STAGE ===== -->
+<section class="snap-section" id="ungoverned">
+  <div class="inner">
+    <div class="ungoverned-inner">
+      <h2 class="ungoverned-q anim">
+        An AI co-worker is allowed<br>to be wrong.<br>
+        <span class="dim">It is not allowed<br>to be ungoverned.</span>
+      </h2>
+      <p class="ungoverned-body anim d2">Organizations already know what they expect from a good human colleague — continuity, responsibility, correction. AI systems need the same baseline.<br><br>Project0 formalizes that standard. Not philosophy. Infrastructure.</p>
+    </div>
+  </div>
+  <button class="next-btn" data-next="lifecycle" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== DECISION LIFECYCLE ===== -->
+<section class="snap-section" id="lifecycle">
+  <div class="inner">
+    <div class="decision-diagram anim d1">
+      <span class="diag-label">Decision Lifecycle</span>
+
+      <div class="diag-entry-row">
+        <div class="diag-entry">Human</div>
+        <span class="diag-entry-sep">·</span>
+        <div class="diag-entry">Agent</div>
+        <span class="diag-entry-sep">·</span>
+        <div class="diag-entry">Application</div>
+      </div>
+
+      <div class="diag-down">
+        <div class="diag-down-line"></div>
+        <div class="diag-down-arrow">↓</div>
+      </div>
+
+      <div class="diag-node" style="width:280px">
+        <div class="diag-node-box promote">
+          <div class="diag-node-name">Promote()</div>
+          <div class="diag-node-sub">commitment boundary</div>
+        </div>
+      </div>
+
+      <div class="diag-down">
+        <div class="diag-down-line"></div>
+        <div class="diag-down-arrow">↓</div>
+      </div>
+
+      <div class="diag-node" style="width:280px">
+        <div class="diag-node-box">
+          <div class="diag-node-name">Authority + Evidence</div>
+          <div class="diag-node-sub">actor · scope · timestamp</div>
+        </div>
+      </div>
+
+      <div class="diag-down">
+        <div class="diag-down-line"></div>
+        <div class="diag-down-arrow">↓</div>
+      </div>
+
+      <div class="diag-node" style="width:280px">
+        <div class="diag-node-box">
+          <div class="diag-node-name">ProjectLedger</div>
+          <div class="diag-node-sub">immutable decision record</div>
+        </div>
+      </div>
+
+      <div class="diag-down">
+        <div class="diag-down-line"></div>
+        <div class="diag-down-arrow">↓</div>
+      </div>
+
+      <div class="diag-split" style="width:280px">
+        <div class="diag-split-branch">
+          <div class="diag-split-box">
+            <div class="diag-split-name">Audit</div>
+            <div class="diag-split-sub">independently verifiable</div>
+          </div>
+        </div>
+        <div class="diag-split-branch">
+          <div class="diag-split-box">
+            <div class="diag-split-name">Correction</div>
+            <div class="diag-split-sub">append-only, never erasure</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="diag-caption">Promote is not a feature. It is a protocol boundary. Anything can commit a decision — human action, agent action, software action. Everything crosses the same governance boundary.</p>
+    </div>
+  </div>
+  <button class="next-btn" data-next="vision" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== VISION ===== -->
+<section class="snap-section" id="vision">
+  <div class="inner">
+    <span class="label anim">The Vision</span>
+    <div class="vision-num anim d1">20 humans.<br>200 agents.</div>
+    <p class="vision-sub anim d2">Not one human and one AI. A workforce. Human teams and agent teams operating from shared promoted context — no re-explaining, no lost decisions, no context collapse.</p>
+    <p class="vision-note anim d3">Not in one meeting. Across a project. Across a company. Over time.</p>
+    <div class="wf-grid anim d4">
+      <div class="wf-card active" data-i="0">
+        <p class="wf-label">Build</p>
+        <p class="wf-num">20 humans · 200 agents</p>
+        <p class="wf-desc">Full team. Full context. Every decision promoted. Every agent knows what every human decided. One workforce.</p>
+      </div>
+      <div class="wf-card" data-i="1">
+        <p class="wf-label">Launch + Maintain</p>
+        <p class="wf-num">20 humans · 125 agents</p>
+        <p class="wf-desc">75 agents ramp down. The 125 that remain hold every piece of institutional memory from the build. Nothing lost.</p>
+      </div>
+      <div class="wf-card" data-i="2">
+        <p class="wf-label">Scale Up</p>
+        <p class="wf-num">20 humans · 200+ agents</p>
+        <p class="wf-desc">Ramp back up. New agents inherit full context instantly because it was promoted. No context loss.</p>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" data-next="moat" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== MOAT ===== -->
+<section class="snap-section" id="moat">
+  <div class="inner">
+    <span class="label anim">Why It Holds</span>
+    <h2 class="moat-h anim d1">Models will improve.<br>Vendors will change.<br><span class="dim">Capabilities will commoditize.</span></h2>
+    <div class="moat-grid">
+      <div class="moat-card anim d2">
+        <span class="moat-card-label">Commoditizes</span>
+        <div class="moat-card-items">
+          <p class="moat-card-item">Model intelligence</p>
+          <p class="moat-card-item">Raw capability</p>
+          <p class="moat-card-item">Inference speed</p>
+          <p class="moat-card-item">API surface</p>
+        </div>
+      </div>
+      <div class="moat-card anim d3">
+        <span class="moat-card-label">Does Not Commoditize</span>
+        <div class="moat-card-items">
+          <p class="moat-card-item keep">Decision memory</p>
+          <p class="moat-card-item keep">Governance infrastructure</p>
+          <p class="moat-card-item keep">Correction pathways</p>
+          <p class="moat-card-item keep">Truth-preserving infrastructure</p>
+        </div>
+      </div>
+    </div>
+    <p class="moat-key anim d4">As AI gets more powerful, the cost of untraceable mistakes goes up. Every organization is about to feel that.</p>
+    <p class="moat-key-sub anim d5">Project0 started with a tool for creators. That tool needed durable memory, decision authority, and accountability. That infrastructure did not exist. So we built it. ProjectLedger was the first system we shipped. Everything else grows from those rails.</p>
+  </div>
+  <button class="next-btn" data-next="manifesto" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== MANIFESTO ===== -->
+<section class="snap-section" id="manifesto">
+  <div class="manifesto-inner">
+    <h2 class="manifesto-q anim">Rails are boring until the train is moving at 300 km/h.</h2>
+    <p class="manifesto-body anim d1">We are not building the flashiest AI product. We are building the infrastructure that makes AI operationally real.</p>
+    <p class="manifesto-body anim d2">Accountable. Correctable. Durable.</p>
+    <p class="manifesto-land anim d3">The next generation of software will be built by<br>small human teams coordinating large agent systems.<br><br>Those systems need rails.<br>Project0 is the rails.</p>
+  </div>
+  <button class="next-btn" data-next="cta" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="snap-section" id="cta">
+  <div class="cta-inner">
+    <h2 class="cta-h anim">If you're building at this layer — let's talk.</h2>
+    <p class="cta-p anim d1">No demo. No sales sequence. If you are a developer, systems thinker, or builder who understands why this matters — one conversation is enough.</p>
+    <a href="mailto:hello@project0.io" class="cta-link anim d2">hello@project0.io</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <span class="footer-logo">Project0</span>
+    <span class="footer-tag">From nothing, create something.</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://projectledger.io" class="footer-link" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+    <a href="mailto:hello@project0.io" class="footer-link">hello@project0.io</a>
+    <span class="footer-infra">ProjectLedger is built on Project0 infrastructure.</span>
+  </div>
+</footer>
+</main>
+
+<script>
+(function() {
+  const scrollContainer = document.querySelector('.scroll-container');
+  const sections = ['hero','reality','thesis','ungoverned','lifecycle','vision','moat','manifesto','cta'];
+
+  function goTo(id, fromUser = false) {
+    const el = document.getElementById(id);
+    if (el && scrollContainer) {
+      if (!fromUser) isProgrammaticScroll = true;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!fromUser) setTimeout(() => { isProgrammaticScroll = false; }, 800);
+    }
+  }
+
+  let isProgrammaticScroll = false;
+
+  // Nav hash links — prevent default, use smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href').slice(1);
+      if (id && document.getElementById(id)) {
+        e.preventDefault();
+        goTo(id, true);
+      }
+    });
+  });
+
+  // Dot nav
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach(d => {
+    d.addEventListener('click', () => {
+      const target = d.getAttribute('data-t');
+      if (target) goTo(target, true);
+    });
+  });
+
+  const dotObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = sections.indexOf(e.target.id);
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[i]) dots[i].classList.add('active');
+      }
+    });
+  }, { threshold: 0.5, root: scrollContainer });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) dotObs.observe(el);
+  });
+
+  // Scroll buttons — one per section (except last)
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('.next-btn');
+    if (btn && btn.dataset.next) goTo(btn.dataset.next, true);
+  });
+
+  // Auto-snap: when ~25% of section remains visible, snap to next/prev
+  const SNAP_THRESHOLD = 0.25;
+  let scrollTicking = false;
+  let lastScrollY = scrollContainer ? scrollContainer.scrollTop : 0;
+
+  function checkAutoSnap() {
+    if (isProgrammaticScroll || !scrollContainer) return;
+    const scrollY = scrollContainer.scrollTop;
+    const vh = scrollContainer.clientHeight;
+    const direction = scrollY > lastScrollY ? 'down' : 'up';
+    lastScrollY = scrollY;
+
+    let currentIdx = -1;
+    for (let i = 0; i < sections.length; i++) {
+      const el = document.getElementById(sections[i]);
+      if (el && el.offsetTop <= scrollY + vh * 0.5) currentIdx = i;
+    }
+    if (currentIdx < 0) currentIdx = 0;
+
+    if (direction === 'down' && currentIdx < sections.length - 1) {
+      const curr = document.getElementById(sections[currentIdx]);
+      const currBottom = curr.offsetTop + curr.offsetHeight;
+      const visible = currBottom - scrollY;
+      if (visible < vh * SNAP_THRESHOLD) {
+        goTo(sections[currentIdx + 1]);
+      }
+    } else if (direction === 'up' && currentIdx > 0) {
+      const curr = document.getElementById(sections[currentIdx]);
+      const visible = scrollY + vh - curr.offsetTop;
+      if (visible < vh * SNAP_THRESHOLD) {
+        goTo(sections[currentIdx - 1]);
+      }
+    }
+    scrollTicking = false;
+  }
+
+  if (scrollContainer) {
+    scrollContainer.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          checkAutoSnap();
+        });
+        scrollTicking = true;
+      }
+    }, { passive: true });
+  }
+
+  // Stagger animations
+  const animObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        animObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px', root: scrollContainer || null });
+
+  document.querySelectorAll('.anim').forEach(el => animObs.observe(el));
+  setTimeout(() => document.querySelectorAll('#hero .anim').forEach(el => el.classList.add('in')), 100);
+
+  // Workforce cards
+  const wfCards = document.querySelectorAll('.wf-card');
+  let wfTimer;
+
+  function setWf(card) {
+    wfCards.forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+  }
+
+  function cycle() {
+    const cur = Array.from(wfCards).findIndex(c => c.classList.contains('active'));
+    setWf(wfCards[(cur + 1) % wfCards.length]);
+  }
+
+  wfTimer = setInterval(cycle, 3600);
+  wfCards.forEach(c => {
+    c.addEventListener('click', () => {
+      clearInterval(wfTimer);
+      setWf(c);
+      wfTimer = setInterval(cycle, 3600);
+    });
+  });
+})();
+</script>
+</body>
+</html>

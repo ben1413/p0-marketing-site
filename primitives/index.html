@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Primitives — Project0</title>
+<meta name="description" content="Three primitives. Promote, Authority, Memory. The physics of the system.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #050505;
+  --near-black: #0a0a0a;
+  --dark: #0f0f0f;
+  --card: #131313;
+  --card-2: #181818;
+  --border: rgba(255,255,255,0.055);
+  --border-med: rgba(255,255,255,0.1);
+  --border-bright: rgba(255,255,255,0.22);
+  --white: #ffffff;
+  --gray-1: #e0e0e0;
+  --gray-2: #808080;
+  --gray-3: #404040;
+  --gray-4: #202020;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.7), 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.11);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-pill: 100px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+}
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  height: 58px;
+  padding: 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5,5,5,0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
+}
+.nav-right { display: flex; align-items: center; gap: 32px; }
+.nav-link { font-size: 13px; font-weight: 450; color: var(--gray-2); text-decoration: none; transition: color 0.15s; }
+.nav-link:hover, .nav-link.active { color: var(--white); }
+.nav-cta {
+  font-size: 12px; font-weight: 600; color: var(--white); text-decoration: none;
+  background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
+  padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
+}
+.nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
+.inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
+.label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.22em; color: var(--gray-3); text-transform: uppercase;
+  margin-bottom: 28px; display: block;
+}
+.prim-h { font-size: clamp(22px, 2.8vw, 38px); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 6px; line-height: 1.1; }
+.prim-sub { font-size: 14px; color: var(--gray-2); margin-bottom: 40px; }
+
+.prim-grid { display: flex; flex-direction: column; gap: 8px; }
+.prim-row {
+  display: grid; grid-template-columns: 140px 1fr;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow-card); transition: border-color 0.2s, box-shadow 0.2s;
+}
+.prim-row:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); }
+.prim-name-col {
+  padding: 28px 20px; border-right: 1px solid var(--border);
+  background: var(--near-black); display: flex; align-items: flex-start;
+}
+.prim-name { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); }
+.prim-body { padding: 28px 32px; }
+.prim-one { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 8px; line-height: 1.45; }
+.prim-detail { font-size: 13px; color: var(--gray-2); line-height: 1.8; margin-bottom: 10px; }
+.prim-detail:last-of-type { margin-bottom: 0; }
+.prim-detail strong { color: var(--white); font-weight: 600; }
+.prim-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.prim-tag {
+  font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
+  color: var(--gray-2); border: 1px solid var(--border-med); border-radius: var(--radius-pill);
+  padding: 4px 11px; background: var(--near-black); box-shadow: var(--shadow-card);
+}
+
+footer {
+  padding: 28px 52px;
+  border-top: 1px solid var(--border); display: flex;
+  align-items: center; justify-content: space-between; background: var(--black);
+}
+.footer-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); display: block; margin-bottom: 3px; }
+.footer-tag { font-size: 12px; color: var(--gray-3); font-style: italic; }
+.footer-links { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.footer-link { font-size: 12px; color: var(--gray-3); text-decoration: none; transition: color 0.15s; }
+.footer-link:hover { color: var(--white); }
+.footer-infra { font-size: 11px; color: var(--gray-4); }
+
+@media (max-width: 860px) {
+  nav { padding: 0 20px; }
+  .inner { padding: 80px 20px 60px; }
+  .prim-row { grid-template-columns: 1fr; }
+  .prim-name-col { border-right: none; border-bottom: 1px solid var(--border); padding: 18px 20px; }
+  .prim-body { padding: 20px; }
+  footer { flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px 20px; }
+}
+
+@media (max-width: 600px) {
+  nav { padding: 0 16px; height: 52px; }
+  .inner { padding: 72px 16px 48px; }
+  .prim-h { font-size: clamp(20px, 5.5vw, 32px); }
+  footer { padding: 20px 16px; gap: 12px; }
+  .footer-links { flex-wrap: wrap; gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Project0</a>
+  <div class="nav-right">
+    <a href="/platform" class="nav-link">Platform</a>
+    <a href="/primitives" class="nav-link active">Primitives</a>
+    <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+  </div>
+</nav>
+
+<main>
+  <div class="inner">
+    <span class="label">The Primitives</span>
+    <h1 class="prim-h">Three primitives.<br>Everything else is implementation.</h1>
+    <p class="prim-sub">Not features. The physics of the system.</p>
+
+    <div class="prim-grid">
+      <div class="prim-row">
+        <div class="prim-name-col"><span class="prim-name">PROMOTE</span></div>
+        <div class="prim-body">
+          <p class="prim-one">Atomic commit for decisions. The line between thinking and deciding.</p>
+          <p class="prim-detail">A commitment event with actor, authority, evidence, and timestamp declared at the moment it happens. If it is not promoted, it is allowed to fade.</p>
+          <div class="prim-tags">
+            <span class="prim-tag">Project → Ledger</span>
+            <span class="prim-tag">Team → Memory</span>
+            <span class="prim-tag">Personal → Working</span>
+          </div>
+        </div>
+      </div>
+      <div class="prim-row">
+        <div class="prim-name-col"><span class="prim-name">AUTHORITY</span></div>
+        <div class="prim-body">
+          <p class="prim-one">Every decision records who was responsible and under what scope.</p>
+          <p class="prim-detail">Delegation is explicit. Scope is declared. Duration is recorded. Project0 does not pretend AI decisions are neutral.</p>
+          <div class="prim-tags">
+            <span class="prim-tag">Human-Led</span>
+            <span class="prim-tag">Human-in-the-Loop</span>
+            <span class="prim-tag">Agent-Autonomous</span>
+          </div>
+        </div>
+      </div>
+      <div class="prim-row">
+        <div class="prim-name-col"><span class="prim-name">MEMORY</span></div>
+        <div class="prim-body">
+          <p class="prim-one">Immutable record of what actually happened.</p>
+          <p class="prim-detail"><strong>Ledger</strong> — immutable. Append-only. Cannot be edited. Cannot be erased. <strong>Brain</strong> — mutable. Operational. Supersession is allowed. Silent edits are not.</p>
+          <p class="prim-detail"><strong>Promote is the boundary.</strong> Core memory is durable and accountable. Working memory is useful and disposable.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div>
+    <span class="footer-logo">Project0</span>
+    <span class="footer-tag">From nothing, create something.</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://projectledger.io" class="footer-link" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+    <a href="mailto:hello@project0.io" class="footer-link">hello@project0.io</a>
+    <a href="/" class="footer-link">← Home</a>
+    <span class="footer-infra">ProjectLedger is built on Project0 infrastructure.</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Project0 — Infrastructure for the multi-human, multi-agent workforce.</title>
-<meta name="description" content="The control plane for AI systems that must be accountable, coordinated, and durable. Built for the workforce where humans and agents work together.">
+<title>Project0 - The operating system for multi-human, multi-agent systems.</title>
+<meta name="description" content="The control plane for AI systems that must be accountable, coordinated, and durable. Governance infrastructure for the next generation of AI-native software.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -25,6 +25,8 @@
   --gray-2: #808080;
   --gray-3: #404040;
   --gray-4: #202020;
+  --muted: #a8a8a8;
+  --amber: #d4a853;
   --shadow-card: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
   --shadow-hover: 0 4px 12px rgba(0,0,0,0.7), 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.11);
   --radius: 12px;
@@ -86,13 +88,17 @@ body {
   scroll-snap-align: start;
   scroll-snap-stop: normal;
 }
+.footer-snap {
+  scroll-snap-align: end;
+  scroll-snap-stop: normal;
+}
 
 /* ============ NAV ============ */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 200;
-  height: 58px;
+  height: 110px;
   padding: 0 52px;
   display: flex;
   align-items: center;
@@ -103,23 +109,32 @@ nav {
   border-bottom: 1px solid var(--border);
 }
 .nav-logo {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
-  font-feature-settings: "ss01";
+  display: inline-flex;
+  align-items: center;
+  height: 90px;
 }
-.nav-right { display: flex; align-items: center; gap: 32px; }
+.nav-logo img {
+  height: 90px;
+  width: auto;
+  display: block;
+}
+.nav-right { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
 .nav-link { font-size: 13px; font-weight: 450; color: var(--gray-2); text-decoration: none; transition: color 0.15s; }
 .nav-link:hover { color: var(--white); }
+.nav-link.active { color: var(--amber); }
+.nav-link-amber { color: var(--gray-2); }
+.nav-link-amber:hover { color: var(--white); }
+.nav-link-amber.active { color: var(--amber); }
+.nav-link-muted { font-size: 13px; font-weight: 450; color: var(--gray-3); text-decoration: none; cursor: default; opacity: 0.6; }
+.nav-link-muted .nav-soon { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--gray-4); margin-left: 4px; vertical-align: middle; }
 .nav-cta {
   font-size: 12px; font-weight: 600; color: var(--white); text-decoration: none;
   background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
   padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
 }
 .nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
+.nav-cta.active { color: var(--amber); border-color: rgba(212,168,83,0.5); background: rgba(212,168,83,0.08); }
+.nav-cta.active:hover { color: var(--amber); background: rgba(212,168,83,0.14); border-color: var(--amber); }
 
 /* ============ DOT NAV ============ */
 .dots {
@@ -148,7 +163,7 @@ nav {
 .inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
 .label {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.22em; color: var(--gray-3); text-transform: uppercase;
+  letter-spacing: 0.22em; color: var(--muted); text-transform: uppercase;
   margin-bottom: 28px; display: block;
 }
 
@@ -160,12 +175,13 @@ nav {
   box-shadow: var(--shadow-card); text-decoration: none; transition: all 0.2s;
 }
 .ledger-badge:hover { border-color: var(--border-bright); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
-.live-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0; box-shadow: 0 0 6px rgba(74,222,128,0.6); }
-.badge-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-2); }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); flex-shrink: 0; box-shadow: 0 0 6px rgba(212,168,83,0.6); }
+.badge-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); }
 .badge-name { font-size: 12px; font-weight: 700; color: var(--white); }
 
 /* ============ HERO ============ */
 #hero { background: var(--black); }
+#hero .label { font-size: clamp(14px, 1.8vw, 22px); margin-bottom: 32px; }
 .hero-inner { max-width: 820px; padding-top: 20px; }
 .hero-h1 {
   font-size: clamp(36px, 4.8vw, 68px);
@@ -179,12 +195,14 @@ nav {
 .hero-sub {
   font-size: clamp(15px, 1.6vw, 18px);
   font-weight: 400;
-  color: var(--gray-2);
+  color: var(--gray-1);
   max-width: 540px;
   line-height: 1.75;
   margin-bottom: 40px;
 }
 .hero-sub em { color: var(--gray-1); font-style: normal; font-weight: 500; }
+.hero-accent { color: var(--amber); }
+.proof-line { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
 .hero-btn {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 12px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
@@ -200,28 +218,41 @@ nav {
   font-size: clamp(22px, 2.8vw, 38px); font-weight: 800;
   letter-spacing: -0.025em; color: var(--white); margin-bottom: 10px; line-height: 1.1;
 }
-.reality-sub { font-size: 15px; color: var(--gray-2); margin-bottom: 44px; max-width: 460px; line-height: 1.7; }
+.reality-sub { font-size: 15px; color: var(--gray-1); margin-bottom: 44px; max-width: 460px; line-height: 1.7; }
 .reality-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 
 .reality-card {
   background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 28px 24px; box-shadow: var(--shadow-card); transition: all 0.2s; position: relative; overflow: hidden;
 }
+.reality-card.coming-soon { border-color: var(--border-med); }
 .reality-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: var(--border-med); border-radius: var(--radius) var(--radius) 0 0;
 }
-.reality-card.live::before { background: #4ade80; }
+.reality-card.live::before { background: var(--amber); }
 .reality-card:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
 .rc-name { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
-.rc-desc { font-size: 13px; color: var(--gray-2); line-height: 1.6; margin-bottom: 14px; }
+.rc-desc { font-size: 13px; color: var(--gray-1); line-height: 1.6; margin-bottom: 14px; }
 .rc-status {
   font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--gray-3);
-  border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 4px 11px;
+  text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--border-med); border-radius: var(--radius-pill); padding: 4px 11px;
   display: inline-block; background: var(--dark);
 }
-.rc-status.live { color: #4ade80; border-color: rgba(74,222,128,0.25); background: rgba(74,222,128,0.06); }
+.rc-status.live { color: var(--amber); border-color: rgba(212,168,83,0.35); background: rgba(212,168,83,0.12); }
+
+/* ============ PLATFORM STACK (Section 3) ============ */
+#platformstack { background: var(--black); }
+.platformstack-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+.platformstack-col {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px 20px; box-shadow: var(--shadow-card);
+}
+.platformstack-col h3 { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); margin-bottom: 12px; }
+.platformstack-col p { font-size: 12px; color: var(--gray-1); line-height: 1.7; }
+.platformstack-thesis { font-size: 15px; font-weight: 600; color: var(--white); margin-bottom: 16px; line-height: 1.6; max-width: 640px; }
+.proof-strip { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; color: var(--muted); line-height: 1.7; }
 
 /* ============ THESIS ============ */
 #thesis { background: var(--black); }
@@ -241,10 +272,10 @@ nav {
 .compare-col.good { background: var(--card-2); border-left: 1px solid var(--border); }
 .compare-col-label {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 18px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px;
 }
 .compare-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.compare-col li { font-size: 13px; padding-left: 16px; position: relative; line-height: 1.5; color: var(--gray-2); }
+.compare-col li { font-size: 13px; padding-left: 16px; position: relative; line-height: 1.5; color: var(--gray-1); }
 .compare-col li::before { content: '-'; position: absolute; left: 0; color: var(--gray-3); }
 .compare-col.good li { color: var(--gray-1); }
 .compare-col.good li::before { color: var(--gray-3); }
@@ -253,9 +284,9 @@ nav {
   background: var(--dark); border-top: 1px solid var(--border);
 }
 .compare-close p { font-size: 14px; font-weight: 600; color: var(--white); line-height: 1.6; }
-.compare-close p + p { margin-top: 2px; color: var(--gray-2); font-weight: 400; font-size: 13px; }
+.compare-close p + p { margin-top: 2px; color: var(--gray-1); font-weight: 400; font-size: 13px; }
 
-/* ============ UNGOVERNED — FULL STAGE ============ */
+/* ============ UNGOVERNED - FULL STAGE ============ */
 #ungoverned { background: var(--near-black); }
 .ungoverned-inner { max-width: 820px; }
 .ungoverned-q {
@@ -263,12 +294,34 @@ nav {
   line-height: 1.05; letter-spacing: -0.038em; color: var(--white); margin-bottom: 32px;
 }
 .ungoverned-q .dim { color: var(--gray-3); }
-.ungoverned-body { font-size: 16px; color: var(--gray-2); max-width: 520px; line-height: 1.85; }
+.ungoverned-body { font-size: 16px; color: var(--gray-1); max-width: 520px; line-height: 1.85; }
+.mechanism-strip { margin-top: 32px; font-family: var(--mono); font-size: 12px; color: var(--gray-1); line-height: 2; }
+.mechanism-strip .m-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.mechanism-strip .m-label { color: var(--white); min-width: 140px; }
+.mechanism-strip .m-arrow { color: var(--gray-3); }
+.mechanism-strip .m-value { color: var(--gray-1); }
+
+/* ============ GOVERNANCE (Section 6) ============ */
+#governance { background: var(--black); }
+.gov-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 24px; }
+.gov-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; box-shadow: var(--shadow-card); }
+.gov-card h3 { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+.gov-card p { font-size: 13px; color: var(--gray-1); line-height: 1.7; }
+
+/* ============ SURFACE GETS (Section 7) ============ */
+#surfacegets { background: var(--near-black); }
+.surface-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 24px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); }
+.surface-row { display: grid; grid-template-columns: 180px 1fr; gap: 16px; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--border); background: var(--card); }
+.surface-row:nth-child(odd) { background: var(--card-2); }
+.surface-row:last-child { border-bottom: none; }
+.surface-label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--white); }
+.surface-desc { font-size: 13px; color: var(--gray-1); line-height: 1.6; }
+.surface-close { font-size: 15px; font-weight: 600; color: var(--white); margin-top: 28px; line-height: 1.6; }
 
 /* ============ PLATFORM ============ */
 #platform { background: var(--near-black); }
 .platform-h { font-size: clamp(22px, 2.8vw, 38px); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 8px; line-height: 1.1; }
-.platform-sub { font-size: 15px; color: var(--gray-2); max-width: 440px; line-height: 1.7; margin-bottom: 36px; }
+.platform-sub { font-size: 15px; color: var(--muted); max-width: 440px; line-height: 1.7; margin-bottom: 36px; }
 .stack { display: flex; flex-direction: column; gap: 8px; }
 
 .stack-core {
@@ -320,8 +373,8 @@ nav {
   font-size: clamp(64px, 9.5vw, 128px); font-weight: 800;
   line-height: 0.92; letter-spacing: -0.045em; color: var(--white); margin-bottom: 20px;
 }
-.vision-sub { font-size: 16px; color: var(--gray-2); max-width: 500px; line-height: 1.8; margin-bottom: 10px; }
-.vision-note { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 40px; }
+.vision-sub { font-size: 16px; color: var(--gray-1); max-width: 500px; line-height: 1.8; margin-bottom: 10px; }
+.vision-note { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
 .wf-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
 .wf-card {
   background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
@@ -335,9 +388,9 @@ nav {
 .wf-card.active { background: var(--card-2); border-color: var(--border-bright); box-shadow: var(--shadow-hover); transform: translateY(-3px); }
 .wf-card.active::before { background: var(--white); }
 .wf-card:hover:not(.active) { border-color: var(--border-med); transform: translateY(-1px); }
-.wf-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 10px; }
+.wf-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 .wf-num { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 10px; letter-spacing: -0.02em; }
-.wf-desc { font-size: 13px; color: var(--gray-2); line-height: 1.7; }
+.wf-desc { font-size: 13px; color: var(--gray-1); line-height: 1.7; }
 
 /* ============ MOAT ============ */
 #moat { background: var(--near-black); }
@@ -349,26 +402,26 @@ nav {
   padding: 28px 24px; box-shadow: var(--shadow-card); transition: all 0.2s;
 }
 .moat-card:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); }
-.moat-card-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 14px; display: block; }
+.moat-card-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; display: block; }
 .moat-card-items { display: flex; flex-direction: column; gap: 8px; }
-.moat-card-item { font-size: 13px; color: var(--gray-2); padding-left: 16px; position: relative; line-height: 1.5; }
+.moat-card-item { font-size: 13px; color: var(--gray-1); padding-left: 16px; position: relative; line-height: 1.5; }
 .moat-card-item::before { content: '-'; position: absolute; left: 0; color: var(--gray-3); }
 .moat-card-item.keep { color: var(--gray-1); }
 .moat-key { font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.7; max-width: 600px; }
-.moat-key-sub { font-size: 13px; color: var(--gray-2); line-height: 1.8; margin-top: 10px; max-width: 560px; }
+.moat-key-sub { font-size: 13px; color: var(--gray-1); line-height: 1.8; margin-top: 10px; max-width: 560px; }
 
 /* ============ MANIFESTO ============ */
 #manifesto { background: var(--black); }
 .manifesto-inner { max-width: 860px; margin: 0 auto; padding: 60px 52px; text-align: center; }
 .manifesto-q { font-size: clamp(32px, 5.2vw, 68px); font-weight: 800; letter-spacing: -0.04em; color: var(--white); line-height: 1.05; margin-bottom: 36px; }
-.manifesto-body { font-size: 15px; color: var(--gray-2); max-width: 500px; margin: 0 auto 10px; line-height: 1.85; }
+.manifesto-body { font-size: 15px; color: var(--gray-1); max-width: 500px; margin: 0 auto 10px; line-height: 1.85; }
 .manifesto-land { font-size: 18px; font-weight: 700; color: var(--white); margin-top: 28px; letter-spacing: -0.01em; line-height: 1.6; }
 
 /* ============ CTA ============ */
 #cta { background: var(--near-black); }
 .cta-inner { max-width: 580px; margin: 0 auto; text-align: center; padding: 60px 52px; }
 .cta-h { font-size: clamp(26px, 3.8vw, 50px); font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.1; margin-bottom: 14px; }
-.cta-p { font-size: 15px; color: var(--gray-2); margin-bottom: 36px; line-height: 1.8; max-width: 360px; margin-left: auto; margin-right: auto; }
+.cta-p { font-size: 15px; color: var(--gray-1); margin-bottom: 36px; line-height: 1.8; max-width: 360px; margin-left: auto; margin-right: auto; }
 .cta-link {
   display: inline-block; font-size: 17px; font-weight: 700; color: var(--white); text-decoration: none;
   background: var(--card-2); border: 1px solid var(--border-bright); border-radius: var(--radius);
@@ -439,7 +492,7 @@ nav {
 }
 .diag-node-box.promote .diag-node-name { color: var(--black); }
 .diag-node-sub {
-  font-size: 11px; color: var(--gray-2); margin-top: 4px;
+  font-size: 11px; color: var(--gray-1); margin-top: 4px;
   font-family: var(--mono); letter-spacing: 0.04em;
 }
 .diag-node-box.promote .diag-node-sub { color: rgba(0,0,0,0.45); }
@@ -454,9 +507,9 @@ nav {
   box-shadow: var(--shadow-card);
 }
 .diag-split-name { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--gray-1); letter-spacing: 0.06em; }
-.diag-split-sub { font-size: 11px; color: var(--gray-3); margin-top: 3px; font-family: var(--mono); }
+.diag-split-sub { font-size: 11px; color: var(--muted); margin-top: 3px; font-family: var(--mono); }
 .diag-caption {
-  font-size: 12px; color: var(--gray-3); text-align: center;
+  font-size: 12px; color: var(--gray-1); text-align: center;
   max-width: 400px; line-height: 1.7; margin-top: 28px;
   font-style: italic;
 }
@@ -501,8 +554,8 @@ nav {
 }
 .arch-surface-name { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); }
 .arch-surface-sub { font-size: 10px; color: var(--gray-3); margin-top: 3px; font-family: var(--mono); }
-.arch-surface.live { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
-.arch-surface.live .arch-surface-name { color: #4ade80; }
+.arch-surface.live { border-color: rgba(212,168,83,0.4); background: rgba(212,168,83,0.08); }
+.arch-surface.live .arch-surface-name { color: var(--amber); }
 
 /* ============ FOOTER ============ */
 footer {
@@ -510,18 +563,23 @@ footer {
   border-top: 1px solid var(--border); display: flex;
   align-items: center; justify-content: space-between; background: var(--black);
 }
-.footer-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); display: block; margin-bottom: 3px; }
-.footer-tag { font-size: 12px; color: var(--gray-3); font-style: italic; }
+.footer-logo { display: block; margin-bottom: 6px; }
+.footer-logo img { height: 32px; width: auto; display: block; }
+.footer-tag { font-size: 12px; color: var(--muted); font-style: italic; }
+.footer-tag .footer-tag-amber { color: var(--amber); font-style: italic; }
 .footer-links { display: flex; gap: 24px; align-items: center; }
-.footer-link { font-size: 12px; color: var(--gray-3); text-decoration: none; transition: color 0.15s; }
+.footer-link { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.15s; }
 .footer-link:hover { color: var(--white); }
-.footer-infra { font-size: 11px; color: var(--gray-4); }
 
 @media (max-width: 860px) {
   nav { padding: 0 20px; }
   .nav-right { gap: 20px; }
   .inner { padding: 80px 20px 60px; }
   .reality-grid { grid-template-columns: 1fr; }
+  .platformstack-grid { grid-template-columns: 1fr; }
+  .gov-grid { grid-template-columns: 1fr; }
+  .surface-grid { grid-template-columns: 1fr; }
+  .surface-row { grid-template-columns: 1fr; }
   .compare-grid { grid-template-columns: 1fr; }
   .stack-core, .stack-row { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
   .core-desc, .stack-desc { padding: 0; }
@@ -541,8 +599,8 @@ footer {
 }
 
 @media (max-width: 600px) {
-  nav { padding: 0 16px; height: 52px; }
-  .nav-logo { font-size: 11px; letter-spacing: 0.1em; }
+  nav { padding: 0 16px; height: 100px; }
+  .nav-logo, .nav-logo img { height: 70px; }
   .nav-right { gap: 16px; }
   .nav-link { font-size: 12px; }
   .nav-cta { font-size: 11px; padding: 8px 12px; }
@@ -579,10 +637,14 @@ footer {
 
 <!-- NAV -->
 <nav>
-  <a href="/" class="nav-logo">Project0</a>
+  <a href="/" class="nav-logo" aria-label="Project0 home">
+    <img src="/logo.svg" alt="Project0">
+  </a>
   <div class="nav-right">
     <a href="/platform" class="nav-link">Platform</a>
     <a href="/primitives" class="nav-link">Primitives</a>
+    <a href="/projectbuild" class="nav-link">ProjectBuild</a>
+    <a href="/projectcore" class="nav-cta">ProjectCore ↗</a>
     <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
   </div>
 </nav>
@@ -591,9 +653,12 @@ footer {
 <div class="dots" id="dots">
   <button class="dot active" data-t="hero" aria-label="Go to Hero"></button>
   <button class="dot" data-t="reality" aria-label="Go to Reality"></button>
+  <button class="dot" data-t="platformstack" aria-label="Go to Platform Stack"></button>
   <button class="dot" data-t="thesis" aria-label="Go to Thesis"></button>
   <button class="dot" data-t="ungoverned" aria-label="Go to Ungoverned"></button>
-  <button class="dot" data-t="lifecycle" aria-label="Go to Decision Lifecycle"></button>
+  <button class="dot" data-t="governance" aria-label="Go to Governance"></button>
+  <button class="dot" data-t="surfacegets" aria-label="Go to Platform Rails"></button>
+  <button class="dot" data-t="lifecycle" aria-label="Go to Primitives"></button>
   <button class="dot" data-t="vision" aria-label="Go to Vision"></button>
   <button class="dot" data-t="moat" aria-label="Go to Moat"></button>
   <button class="dot" data-t="manifesto" aria-label="Go to Manifesto"></button>
@@ -613,10 +678,11 @@ footer {
   <div class="inner">
     <div class="hero-inner">
       <p class="label anim">Governance Infrastructure</p>
-      <h1 class="hero-h1 anim d1">Infrastructure<br>for multi-human,<br>multi-agent systems.</h1>
-      <p class="hero-sub anim d2">The control plane for AI systems that must be <em>accountable, coordinated, and durable.</em> Built for the workforce where humans and agents work together.</p>
-      <p class="hero-sub anim d3" style="font-size:14px; color: var(--gray-3); margin-bottom:40px;">Powerful AI is inevitable. Trustworthy AI requires rails.</p>
-      <a href="mailto:hello@project0.io" class="hero-btn anim d4">If you're building at this layer — let's talk →</a>
+      <h1 class="hero-h1 anim d1">The operating system for<br>multi-human, multi-agent systems.</h1>
+      <p class="hero-sub anim d2">The control plane for AI systems that must be <span class="hero-accent">accountable, coordinated, and durable.</span> Built for the workforce where humans and agents work together.</p>
+      <p class="proof-line anim d2">Versioned API · Agent runtime · Immutable ledger · Governance rules · Persistent run records · System observability</p>
+      <p class="hero-sub anim d3" style="font-size:14px; color: var(--muted); font-style: italic; margin-bottom:40px;">Powerful AI is inevitable. Trustworthy AI requires rails.</p>
+      <a href="mailto:hello@project0.io" class="hero-btn anim d4">If you're building at this layer - let's talk →</a>
     </div>
   </div>
   <button class="next-btn" data-next="reality" aria-label="Scroll to next section">
@@ -630,30 +696,63 @@ footer {
   <div class="inner">
     <span class="label anim">Already Running</span>
     <h2 class="reality-h anim d1">This is not a concept.<br>This is infrastructure.</h2>
-    <p class="reality-sub anim d2">Three systems. One control plane. The first purpose-built stack for organizations where humans and agents work together.</p>
+    <p class="reality-sub anim d2">One control plane. One contract layer. One runtime for every surface. The first purpose-built stack for organizations where humans and agents work together.</p>
     <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px;">
       <a href="/platform" class="hero-btn anim d3" style="display: inline-flex;">View the stack →</a>
       <a href="/primitives" class="hero-btn anim d3" style="display: inline-flex; background: transparent; border-color: var(--border);">View primitives →</a>
     </div>
     <div class="reality-grid">
       <div class="reality-card live anim d2">
-        <p class="rc-name">ProjectLedger</p>
-        <p class="rc-desc">Append-only, tamper-evident system of record for AI-assisted decisions. Sealed at the moment of commitment. Independently verifiable.</p>
+        <p class="rc-name">ProjectCore</p>
+        <p class="rc-desc">API-only control plane. Agent runtime, memory, governance, evaluation, ledger, and observability - the primitives that power every surface on the platform.</p>
         <span class="rc-status live">Live Now</span>
       </div>
-      <div class="reality-card anim d3">
-        <p class="rc-name">ProjectCore</p>
-        <p class="rc-desc">API-only control plane. Promote, Authority, Memory — the three primitives that power every surface on the platform.</p>
-        <span class="rc-status">In Development</span>
+      <div class="reality-card live anim d3">
+        <p class="rc-name">ProjectLedger</p>
+        <p class="rc-desc">Append-only, tamper-evident system of record for AI-assisted decisions. Sealed at the moment of commitment. Independently verifiable. The first surface built on P0 rails.</p>
+        <span class="rc-status live">Live Now</span>
       </div>
-      <div class="reality-card anim d4">
-        <p class="rc-name">Spines</p>
-        <p class="rc-desc">80% of a compliant AI build — auth, billing, multi-tenant isolation, governance capture, ledger hooks. Tech-agnostic rails.</p>
-        <span class="rc-status">Platform Layer</span>
+      <div class="reality-card coming-soon anim d4">
+        <p class="rc-name">ProjectBuild</p>
+        <p class="rc-desc">Multi-human, multi-agent collaboration. Shared governance, shared decision authority, organizational memory. Built on P0 Core rails.</p>
+        <span class="rc-status">Coming Soon</span>
       </div>
     </div>
   </div>
-  <button class="next-btn" data-next="thesis" aria-label="Scroll to next section">
+  <button class="next-btn" data-next="platformstack" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== PLATFORM STACK (Section 3) ===== -->
+<section class="snap-section" id="platformstack">
+  <div class="inner">
+    <span class="label anim">The Platform</span>
+    <h2 class="reality-h anim d1">One platform.<br>Every surface inherits the same rails.</h2>
+    <p class="reality-sub anim d2">P0 is not one application backend. It is a multi-surface platform stack. If a capability belongs to more than one surface, it lives in P0 - not in the app.</p>
+    <div class="platformstack-grid anim d3">
+      <div class="platformstack-col">
+        <h3>P0 Core</h3>
+        <p>The deployable control plane. Agent runtime · Memory · Governance · Evaluation · Ledger · Observability. Run orchestration · Event log · Audit export. Versioned API surface.</p>
+      </div>
+      <div class="platformstack-col">
+        <h3>P0 Contracts</h3>
+        <p>Shared schemas and payloads. Every surface builds against the same canonical types.</p>
+      </div>
+      <div class="platformstack-col">
+        <h3>P0 Surface SDK</h3>
+        <p>Common integration layer. Auth · API access · Retries · Platform flows · Idempotency.</p>
+      </div>
+      <div class="platformstack-col">
+        <h3>P0 Surface Kit</h3>
+        <p>Reusable interaction patterns. Ledger views · Promote flows · Authority displays · Eval patterns.</p>
+      </div>
+    </div>
+    <p class="platformstack-thesis anim d4">Project0 is building the governance infrastructure layer for the next generation of AI-native software.</p>
+    <p class="proof-strip anim d5">Versioned API surface · Immutable ledger · Persistent run records · Governance rule registry · Evaluation engine · System event log · Model registry · Per-project tenant isolation · Audit export</p>
+  </div>
+  <button class="next-btn" data-next="platformstack" aria-label="Scroll to next section">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
   </button>
@@ -663,7 +762,7 @@ footer {
 <section class="snap-section" id="thesis">
   <div class="inner">
     <span class="label anim">The Problem</span>
-    <p class="thesis-statement anim d1">AI is being deployed as if it were a co-worker. <em>Most systems don't meet the baseline.</em></p>
+    <p class="thesis-statement anim d1">AI is being deployed as if it were a co-worker. <em>AI systems don't meet the baseline.</em></p>
     <div class="compare-grid anim d2">
       <div class="compare-col bad">
         <p class="compare-col-label">Stateless AI</p>
@@ -686,7 +785,7 @@ footer {
         </ul>
       </div>
       <div class="compare-close">
-        <p>A good human colleague carries context forward, understands their role, and can explain what they did and why.</p>
+        <p>A good human colleague is trustable, carries context forward, understands their role, and can explain what they did and why.</p>
         <p>That is the baseline we already enforce in healthy organizations. Most AI doesn't meet it.</p>
       </div>
     </div>
@@ -697,7 +796,7 @@ footer {
   </button>
 </section>
 
-<!-- ===== UNGOVERNED — FULL STAGE ===== -->
+<!-- ===== UNGOVERNED - FULL STAGE ===== -->
 <section class="snap-section" id="ungoverned">
   <div class="inner">
     <div class="ungoverned-inner">
@@ -705,8 +804,82 @@ footer {
         An AI co-worker is allowed<br>to be wrong.<br>
         <span class="dim">It is not allowed<br>to be ungoverned.</span>
       </h2>
-      <p class="ungoverned-body anim d2">Organizations already know what they expect from a good human colleague — continuity, responsibility, correction. AI systems need the same baseline.<br><br>Project0 formalizes that standard. Not philosophy. Infrastructure.</p>
+      <p class="ungoverned-body anim d2">Organizations already know what they expect from a good human colleague - continuity, responsibility, correction. AI systems need the same baseline.<br><br>Project0 formalizes that standard. Not philosophy. Infrastructure.</p>
+      <div class="mechanism-strip anim d3">
+        <div class="m-row"><span class="m-label">CONTINUITY</span><span class="m-arrow">→</span><span class="m-value">Brain + cognitive preload</span></div>
+        <div class="m-row"><span class="m-label">RESPONSIBILITY</span><span class="m-arrow">→</span><span class="m-value">Authority modes + delegation records</span></div>
+        <div class="m-row"><span class="m-label">AUDITABLE</span><span class="m-arrow">→</span><span class="m-value">Ledger + run records + event log + audit export</span></div>
+        <div class="m-row"><span class="m-label">CORRECTION</span><span class="m-arrow">→</span><span class="m-value">Supersede + evaluation windows + governance controls</span></div>
+        <div class="m-row"><span class="m-label">UNGOVERNED</span><span class="m-arrow">→</span><span class="m-value">Rule registry + halt/suspend/resume + decision logs</span></div>
+        <div class="m-row"><span class="m-label">MEMORY</span><span class="m-arrow">→</span><span class="m-value">Brain recall + promote indexing + cognitive preload</span></div>
+      </div>
     </div>
+  </div>
+  <button class="next-btn" data-next="governance" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== GOVERNANCE (Section 6) ===== -->
+<section class="snap-section" id="governance">
+  <div class="inner">
+    <span class="label anim">Governance</span>
+    <h2 class="reality-h anim d1">Governance is not<br>one feature.</h2>
+    <p class="reality-sub anim d2">It is a runtime. Every layer is configurable. Every decision is traceable.</p>
+    <div class="gov-grid anim d3">
+      <div class="gov-card">
+        <h3>1. Authority Modes</h3>
+        <p>Human-led · Human-in-the-loop · Agent-autonomous. Declared at the moment of commitment, not inferred afterward.</p>
+      </div>
+      <div class="gov-card">
+        <h3>2. Delegation Records</h3>
+        <p>Scope is declared. Duration is recorded. Delegation is explicit and traceable.</p>
+      </div>
+      <div class="gov-card">
+        <h3>3. Rule Registry</h3>
+        <p>User-defined governance rules enforced at runtime. Not policy documents. Executable constraints.</p>
+      </div>
+      <div class="gov-card">
+        <h3>4. Halt / Suspend / Resume</h3>
+        <p>Governance can stop execution. Rules that trigger are recorded. Resumption requires explicit authorization.</p>
+      </div>
+      <div class="gov-card">
+        <h3>5. Decision Logs</h3>
+        <p>Every governance-relevant event is written. Not as a side effect. As a first-class system record.</p>
+      </div>
+      <div class="gov-card">
+        <h3>6. Audit Export</h3>
+        <p>Everything that matters ships as a structured, independently verifiable artifact. Hand it to any auditor, regulator, or legal team.</p>
+      </div>
+    </div>
+  </div>
+  <button class="next-btn" data-next="surfacegets" aria-label="Scroll to next section">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;">Scroll</span>
+  </button>
+</section>
+
+<!-- ===== WHAT EVERY SURFACE GETS (Section 7) ===== -->
+<section class="snap-section" id="surfacegets">
+  <div class="inner">
+    <span class="label anim">Platform Rails</span>
+    <h2 class="reality-h anim d1">Every surface on P0<br>inherits the same runtime.</h2>
+    <p class="reality-sub anim d2">ProjectLedger gets it. ProjectBuild will get it. Any surface built on Spines gets it. This is not a shared library. It is a shared control plane.</p>
+    <div class="surface-grid anim d3">
+      <div class="surface-row"><span class="surface-label">Agent Runtime</span><span class="surface-desc">Run records. Execution traces. Persistent state.</span></div>
+      <div class="surface-row"><span class="surface-label">Cognitive Preload</span><span class="surface-desc">Context assembled before every agent invocation.</span></div>
+      <div class="surface-row"><span class="surface-label">Brain Memory</span><span class="surface-desc">Mutable working memory. Supersession, not erasure.</span></div>
+      <div class="surface-row"><span class="surface-label">Ledger</span><span class="surface-desc">Immutable. Append-only. Tamper-evident. Sealed.</span></div>
+      <div class="surface-row"><span class="surface-label">Governance Gate</span><span class="surface-desc">Rules checked before action. Halt/suspend if triggered.</span></div>
+      <div class="surface-row"><span class="surface-label">Authority Attribution</span><span class="surface-desc">Every decision carries actor, mode, scope, timestamp.</span></div>
+      <div class="surface-row"><span class="surface-label">Evaluation Engine</span><span class="surface-desc">Datasets, batch runs, windows. Seal when ready.</span></div>
+      <div class="surface-row"><span class="surface-label">System Event Log</span><span class="surface-desc">Every platform event written. Replayable. Debuggable.</span></div>
+      <div class="surface-row"><span class="surface-label">Model Registry</span><span class="surface-desc">Model definitions as first-class objects. Cost attributed.</span></div>
+      <div class="surface-row"><span class="surface-label">Tenant Isolation</span><span class="surface-desc">Per-project boundary. Scoped memory, runs, and ledger.</span></div>
+      <div class="surface-row"><span class="surface-label">Audit Export</span><span class="surface-desc">Structured artifact. Independently verifiable.</span></div>
+    </div>
+    <p class="surface-close anim d4">The product is not the model. The product is the system that makes the model trustworthy.</p>
   </div>
   <button class="next-btn" data-next="lifecycle" aria-label="Scroll to next section">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -714,9 +887,20 @@ footer {
   </button>
 </section>
 
-<!-- ===== DECISION LIFECYCLE ===== -->
+<!-- ===== CORE PRIMITIVES + DECISION LIFECYCLE (Section 7B) ===== -->
 <section class="snap-section" id="lifecycle">
   <div class="inner">
+    <span class="label anim">Core Primitives</span>
+    <h2 class="reality-h anim d1">The primitives are small.<br>The system they build is not.</h2>
+    <p class="reality-sub anim d2">Everything in Project0 is built on five primitives. If you understand these, you understand the system.</p>
+    <div class="mechanism-strip anim d3" style="margin-top:20px;margin-bottom:32px;">
+      <div class="m-row"><span class="m-label">run()</span><span class="m-value">Execute an agent with governed context. Every run is persisted. Every trace is attributable.</span></div>
+      <div class="m-row"><span class="m-label">promote()</span><span class="m-value">Commit a decision across the governance boundary. The line between thinking and deciding.</span></div>
+      <div class="m-row"><span class="m-label">delegate()</span><span class="m-value">Grant authority to an agent with explicit scope. Duration recorded. Delegation traceable.</span></div>
+      <div class="m-row"><span class="m-label">evaluate()</span><span class="m-value">Open a bounded decision window. Close it. Seal it. Hand it to anyone who asks.</span></div>
+      <div class="m-row"><span class="m-label">halt()</span><span class="m-value">Stop execution when governance rules trigger. Suspend. Resume. Every trigger recorded.</span></div>
+    </div>
+    <p class="anim d3" style="margin-bottom:40px;"><a href="https://project0.io/docs/core" class="hero-btn" style="display:inline-flex;">View the API →</a></p>
     <div class="decision-diagram anim d1">
       <span class="diag-label">Decision Lifecycle</span>
 
@@ -747,8 +931,20 @@ footer {
 
       <div class="diag-node" style="width:280px">
         <div class="diag-node-box">
+          <div class="diag-node-name">Governance Gate</div>
+          <div class="diag-node-sub">rules checked · halt if triggered</div>
+        </div>
+      </div>
+
+      <div class="diag-down">
+        <div class="diag-down-line"></div>
+        <div class="diag-down-arrow">↓</div>
+      </div>
+
+      <div class="diag-node" style="width:280px">
+        <div class="diag-node-box">
           <div class="diag-node-name">Authority + Evidence</div>
-          <div class="diag-node-sub">actor · scope · timestamp</div>
+          <div class="diag-node-sub">actor · scope · mode · timestamp</div>
         </div>
       </div>
 
@@ -784,7 +980,14 @@ footer {
         </div>
       </div>
 
-      <p class="diag-caption">Promote is not a feature. It is a protocol boundary. Anything can commit a decision — human action, agent action, software action. Everything crosses the same governance boundary.</p>
+      <p class="diag-caption">Promote is not a feature. It is a protocol boundary. Anything can commit a decision - human action, agent action, software action. Everything crosses the same governance boundary.</p>
+      <ul style="margin-top:20px;font-size:12px;color:var(--muted);line-height:1.9;list-style:disc;padding-left:20px;max-width:480px;">
+        <li>Governance gate fires before action</li>
+        <li>Agent run record persisted after execution</li>
+        <li>System event log captures for replay and debugging</li>
+        <li>Evaluation window active before final sealing</li>
+        <li>Every Promote event generates a ledger item, a memory summary index, and an audit trace</li>
+      </ul>
     </div>
   </div>
   <button class="next-btn" data-next="vision" aria-label="Scroll to next section">
@@ -798,7 +1001,7 @@ footer {
   <div class="inner">
     <span class="label anim">The Vision</span>
     <div class="vision-num anim d1">20 humans.<br>200 agents.</div>
-    <p class="vision-sub anim d2">Not one human and one AI. A workforce. Human teams and agent teams operating from shared promoted context — no re-explaining, no lost decisions, no context collapse.</p>
+    <p class="vision-sub anim d2">Not one human and one AI. A workforce. Human teams and agent teams operating from shared promoted context - no re-explaining, no lost decisions, no context collapse.</p>
     <p class="vision-note anim d3">Not in one meeting. Across a project. Across a company. Over time.</p>
     <div class="wf-grid anim d4">
       <div class="wf-card active" data-i="0">
@@ -817,6 +1020,7 @@ footer {
         <p class="wf-desc">Ramp back up. New agents inherit full context instantly because it was promoted. No context loss.</p>
       </div>
     </div>
+    <p class="vision-sub anim d5" style="margin-top:24px;font-style:italic;">Meetings, run records, event logs, governance decisions, and promoted context persist as first-class system objects. The workforce remembers.</p>
   </div>
   <button class="next-btn" data-next="moat" aria-label="Scroll to next section">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -827,7 +1031,7 @@ footer {
 <!-- ===== MOAT ===== -->
 <section class="snap-section" id="moat">
   <div class="inner">
-    <span class="label anim">Why It Holds</span>
+    <span class="label anim">Looking Forward</span>
     <h2 class="moat-h anim d1">Models will improve.<br>Vendors will change.<br><span class="dim">Capabilities will commoditize.</span></h2>
     <div class="moat-grid">
       <div class="moat-card anim d2">
@@ -846,11 +1050,13 @@ footer {
           <p class="moat-card-item keep">Governance infrastructure</p>
           <p class="moat-card-item keep">Correction pathways</p>
           <p class="moat-card-item keep">Truth-preserving infrastructure</p>
+          <p class="moat-card-item keep">Execution history</p>
+          <p class="moat-card-item keep">Model attribution + cost tracing</p>
         </div>
       </div>
     </div>
     <p class="moat-key anim d4">As AI gets more powerful, the cost of untraceable mistakes goes up. Every organization is about to feel that.</p>
-    <p class="moat-key-sub anim d5">Project0 started with a tool for creators. That tool needed durable memory, decision authority, and accountability. That infrastructure did not exist. So we built it. ProjectLedger was the first system we shipped. Everything else grows from those rails.</p>
+    <p class="moat-key-sub anim d5">Model definitions in P0 are first-class objects. Agents link to model profiles. Execution traces include model identity and cost. When vendors change - and they will - the record stays clean. Your governance doesn't depend on who you're running.</p>
   </div>
   <button class="next-btn" data-next="manifesto" aria-label="Scroll to next section">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -864,7 +1070,8 @@ footer {
     <h2 class="manifesto-q anim">Rails are boring until the train is moving at 300 km/h.</h2>
     <p class="manifesto-body anim d1">We are not building the flashiest AI product. We are building the infrastructure that makes AI operationally real.</p>
     <p class="manifesto-body anim d2">Accountable. Correctable. Durable.</p>
-    <p class="manifesto-land anim d3">The next generation of software will be built by<br>small human teams coordinating large agent systems.<br><br>Those systems need rails.<br>Project0 is the rails.</p>
+    <p class="manifesto-body anim d2">Those rails already include versioned agent runtime, configurable governance rules, immutable decision sealing, persistent run traces, evaluation infrastructure, and a model registry that outlasts any vendor.</p>
+    <p class="manifesto-land anim d3">The next generation of software will be built by<br>small human teams coordinating large agent systems.<br><br>Those systems need rails.<br><strong>Project0 is the rails.</strong></p>
   </div>
   <button class="next-btn" data-next="cta" aria-label="Scroll to next section">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -875,30 +1082,30 @@ footer {
 <!-- ===== CTA ===== -->
 <section class="snap-section" id="cta">
   <div class="cta-inner">
-    <h2 class="cta-h anim">If you're building at this layer — let's talk.</h2>
-    <p class="cta-p anim d1">No demo. No sales sequence. If you are a developer, systems thinker, or builder who understands why this matters — one conversation is enough.</p>
+    <h2 class="cta-h anim">If you're building at this layer - let's talk.</h2>
+    <p class="cta-p anim d1">No demo. No sales sequence. If you are a developer, systems thinker, or builder who understands why this matters - one conversation is enough.</p>
     <a href="mailto:hello@project0.io" class="cta-link anim d2">hello@project0.io</a>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- FOOTER (snap target so it stays visible when scrolled to) -->
+<div class="footer-snap">
 <footer>
   <div>
-    <span class="footer-logo">Project0</span>
-    <span class="footer-tag">From nothing, create something.</span>
+    <a href="/" class="footer-logo" aria-label="Project0 home"><img src="/logo.svg" alt="Project0"></a>
+    <span class="footer-tag">From nothing, <span class="footer-tag-amber">create something.</span></span>
   </div>
   <div class="footer-links">
-    <a href="https://projectledger.io" class="footer-link" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
     <a href="mailto:hello@project0.io" class="footer-link">hello@project0.io</a>
-    <span class="footer-infra">ProjectLedger is built on Project0 infrastructure.</span>
   </div>
 </footer>
+</div>
 </main>
 
 <script>
 (function() {
   const scrollContainer = document.querySelector('.scroll-container');
-  const sections = ['hero','reality','thesis','ungoverned','lifecycle','vision','moat','manifesto','cta'];
+  const sections = ['hero','reality','platformstack','thesis','ungoverned','governance','surfacegets','lifecycle','vision','moat','manifesto','cta'];
 
   function goTo(id, fromUser = false) {
     const el = document.getElementById(id);
@@ -911,7 +1118,7 @@ footer {
 
   let isProgrammaticScroll = false;
 
-  // Nav hash links — prevent default, use smooth scroll
+  // Nav hash links - prevent default, use smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href').slice(1);
@@ -946,7 +1153,7 @@ footer {
     if (el) dotObs.observe(el);
   });
 
-  // Scroll buttons — one per section (except last)
+  // Scroll buttons - one per section (except last)
   document.body.addEventListener('click', (e) => {
     const btn = e.target.closest('.next-btn');
     if (btn && btn.dataset.next) goTo(btn.dataset.next, true);

@@ -54,6 +54,25 @@ nav {
 .nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
 .nav-cta.active { color: var(--amber); border-color: rgba(212,168,83,0.5); background: rgba(212,168,83,0.08); }
 .nav-cta.active:hover { color: var(--amber); background: rgba(212,168,83,0.14); border-color: var(--amber); }
+
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 0; border: none; background: transparent; color: var(--white); cursor: pointer; z-index: 202; border-radius: var(--radius-sm); }
+.nav-toggle:hover { background: var(--card-2); }
+.nav-toggle span { display: block; width: 20px; height: 2px; background: currentColor; border-radius: 1px; transition: transform 0.25s, opacity 0.25s; }
+nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+@media (max-width: 768px) {
+  .nav-toggle { display: flex; }
+  .nav-backdrop { display: block; }
+  .nav-right { position: fixed; top: 0; right: 0; width: min(280px, 85vw); height: 100vh; background: var(--near-black); flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 100px 24px 24px; gap: 0; box-shadow: -4px 0 24px rgba(0,0,0,0.5); transform: translateX(100%); transition: transform 0.25s ease; z-index: 201; border-left: 1px solid var(--border); }
+  .nav-right .nav-link, .nav-right .nav-cta { display: block; padding: 14px 0; border-bottom: 1px solid var(--border); border-radius: 0; }
+  .nav-right .nav-cta { background: transparent; box-shadow: none; }
+  nav.nav-open .nav-right { transform: translateX(0); }
+  nav.nav-open .nav-backdrop { opacity: 1; pointer-events: auto; }
+  body.nav-open { overflow: hidden; }
+}
+
 .inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
 
 /* Hero */
@@ -173,8 +192,10 @@ footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex;
 </head>
 <body>
 
-<nav>
+<nav id="main-nav">
   <a href="/" class="nav-logo" aria-label="Project0 home"><img src="/logo.svg" alt="Project0"></a>
+  <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav-backdrop" aria-hidden="true"></div>
   <div class="nav-right">
     <a href="/platform" class="nav-link">Platform</a>
     <a href="/primitives" class="nav-link">Primitives</a>
@@ -370,6 +391,16 @@ footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex;
     <a href="mailto:hello@project0.io" class="footer-link">hello@project0.io</a>
   </div>
 </footer>
-
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  if(!nav)return;
+  var btn=nav.querySelector('.nav-toggle'), back=nav.querySelector('.nav-backdrop'), links=nav.querySelectorAll('.nav-right a');
+  function close(){ nav.classList.remove('nav-open'); document.body.classList.remove('nav-open'); if(btn)btn.setAttribute('aria-expanded','false'); }
+  if(btn)btn.addEventListener('click',function(){ nav.classList.contains('nav-open')?close():(nav.classList.add('nav-open'),document.body.classList.add('nav-open'),btn.setAttribute('aria-expanded','true')); });
+  if(back)back.addEventListener('click',close);
+  links.forEach(function(a){ a.addEventListener('click',close); });
+})();
+</script>
 </body>
 </html>

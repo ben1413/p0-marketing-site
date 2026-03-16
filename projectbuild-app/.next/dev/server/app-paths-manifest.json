@@ -1,0 +1,8 @@
+{
+  "/api/agents/list/route": "app/api/agents/list/route.js",
+  "/api/ledger/ui/route": "app/api/ledger/ui/route.js",
+  "/api/v1/agents/run/stream/route": "app/api/v1/agents/run/stream/route.js",
+  "/page": "app/page.js",
+  "/projects/[id]/board/page": "app/projects/[id]/board/page.js",
+  "/projects/[id]/room/page": "app/projects/[id]/room/page.js"
+}

@@ -1,0 +1,3 @@
+{
+  "/api/voice/speak/route": "app/api/voice/speak/route.js"
+}

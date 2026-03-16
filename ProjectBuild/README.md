@@ -6,6 +6,16 @@ It sits on top of `Core`, which remains the system of record for agent execution
 
 This folder is the starting point for defining what ProjectBuild v1 is, what it is not, and what future human and AI builders should implement first.
 
+## Team Summary
+
+**New to the project?** Read `PROJECTBUILD_TEAM_SUMMARY.md` first. It's a presentation-ready overview of what we've designed and built, with special focus on the builder mode vision and day-in-the-life flow.
+
+## Current Tasks
+
+**What needs doing right now?** See `CURRENT_TASKS.md`. Live task list — immediate blockers, short-term wiring, backlog, open questions, and full completed history.
+
+---
+
 ## Quick Orientation
 
 ProjectBuild v1 is designed to prove five things:
@@ -32,25 +42,26 @@ Review the docs in this order:
 8. `SYSTEM_LIFECYCLE.md`
 9. `TRUST_BOUNDARY.md`
 10. `BUILD_WORKSPACE_MODEL.md`
-11. `OBJECT_MODEL.md`
-12. `AGENT_INTERACTION_MODEL.md`
-13. `BOARD_MODEL.md`
-14. `LEDGER_INTEGRATION.md`
-15. `COLLABORATION_MODEL.md`
-16. `PRESENCE_MODEL.md`
-17. `UI_SURFACE_SPEC.md`
-18. `MARKETPLACE_MODEL.md`
-19. `MEMORY_ARCHITECTURE.md`
-20. `MEMORY_INDEXING_AND_COGNITIVE_PATTERNS.md`
-21. `DATA_SCHEMA_AND_API_MAP.md`
-22. `AGENT_RUNTIME_ARCHITECTURE.md`
-23. `GOVERNANCE_ARCHITECTURE.md`
-24. `USER_FLOWS.md`
-25. `SCREEN_SPECS.md`
-26. `AGENT_CONFIGURATION_POLICY.md`
-27. `EVAL_SCORE_METHODOLOGY.md`
-28. `TRUTH_POSTURE.md`
-29. `SOLO_REFERENCE.md`
+11. `BUILDER_MODE.md`
+12. `OBJECT_MODEL.md`
+13. `AGENT_INTERACTION_MODEL.md`
+14. `BOARD_MODEL.md`
+15. `LEDGER_INTEGRATION.md`
+16. `COLLABORATION_MODEL.md`
+17. `PRESENCE_MODEL.md`
+18. `UI_SURFACE_SPEC.md`
+19. `MARKETPLACE_MODEL.md`
+20. `MEMORY_ARCHITECTURE.md`
+21. `MEMORY_INDEXING_AND_COGNITIVE_PATTERNS.md`
+22. `DATA_SCHEMA_AND_API_MAP.md`
+23. `AGENT_RUNTIME_ARCHITECTURE.md`
+24. `GOVERNANCE_ARCHITECTURE.md`
+25. `USER_FLOWS.md`
+26. `SCREEN_SPECS.md`
+27. `AGENT_CONFIGURATION_POLICY.md`
+28. `EVAL_SCORE_METHODOLOGY.md`
+29. `TRUTH_POSTURE.md`
+30. `SOLO_REFERENCE.md`
 
 ## What Exists In This Folder
 
@@ -93,6 +104,10 @@ Defines the separation between Build as the surface layer and Core as the system
 ### `BUILD_WORKSPACE_MODEL.md`
 
 Defines the collaboration model for Build, including workspace, projects, room, tracks, board, and ledger.
+
+### `BUILDER_MODE.md`
+
+Defines the builder mode vision: Chat mode vs Builder mode toggle, Cursor-light embedded IDE, promote-from-builder queue for team approval at the next meeting, and the full loop from reasoning to coding to promote to approval.
 
 ### `OBJECT_MODEL.md`
 

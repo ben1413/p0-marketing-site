@@ -1,0 +1,16 @@
+[00:00:00.672] Server  LOG     ✓ Ready in 500ms
+[00:00:02.139] Server  WARN    ⚠ Unsupported metadata themeColor is configured in metadata export in /projects/[id]/room. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+[00:00:02.236] Server  WARN    ⚠ Unsupported metadata themeColor is configured in metadata export in /projects/[id]/board. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+[00:00:02.398] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:02.408] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:03.543] Browser ERROR   [2026-03-16T16:38:12.300Z]  @firebase/firestore: Firestore (12.10.0): Uncaught Error in snapshot listener: FirebaseError: [code=failed-precondition]: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/project-solo-6b864/firestore/indexes?create_composite=ClRwcm9qZWN0cy9wcm9qZWN0LXNvbG8tNmI4NjQvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL3BiX3RyYWNrcy9pbmRleGVzL18QARoNCglwcm9qZWN0SWQQARoNCgljcmVhdGVkQXQQARoMCghfX25hbWVfXxAB
+[00:01:33.812] Server  LOG     ✓ Compiled in 41ms
+[00:04:36.544] Server  LOG     ✓ Compiled in 45ms
+[00:21:37.980] Server  LOG     ✓ Compiled in 85ms
+[00:21:43.463] Server  LOG     ✓ Compiled in 66ms
+[00:22:13.062] Server  LOG     ✓ Compiled in 100ms
+[00:22:13.542] Browser ERROR   [2026-03-16T17:00:22.860Z]  @firebase/firestore: Firestore (12.10.0): Uncaught Error in snapshot listener: FirebaseError: [code=failed-precondition]: The query requires an index. You can create it here: https://console.firebase.google.com/v1/r/project/project-solo-6b864/firestore/indexes?create_composite=ClRwcm9qZWN0cy9wcm9qZWN0LXNvbG8tNmI4NjQvZGF0YWJhc2VzLyhkZWZhdWx0KS9jb2xsZWN0aW9uR3JvdXBzL3BiX3RyYWNrcy9pbmRleGVzL18QARoNCglwcm9qZWN0SWQQARoNCgljcmVhdGVkQXQQARoMCghfX25hbWVfXxAB
+[00:26:27.684] Server  LOG     ✓ Compiled in 67ms
+[00:27:45.286] Server  LOG     ✓ Compiled in 37ms

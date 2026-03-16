@@ -1,0 +1,3 @@
+{
+  "/api/agent/meeting/close/route": "app/api/agent/meeting/close/route.js"
+}

@@ -1,0 +1,21 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/agent/meeting/close/route": "/api/agent/meeting/close",
+  "/api/agent/meeting/create/route": "/api/agent/meeting/create",
+  "/api/agent/promote/route": "/api/agent/promote",
+  "/api/agent/run/route": "/api/agent/run",
+  "/api/agents/list/route": "/api/agents/list",
+  "/api/agents/register/route": "/api/agents/register",
+  "/api/ledger/item/[id]/route": "/api/ledger/item/[id]",
+  "/api/ledger/items/route": "/api/ledger/items",
+  "/api/ledger/ui/route": "/api/ledger/ui",
+  "/api/v1/agents/run/stream/route": "/api/v1/agents/run/stream",
+  "/api/v1/builder/promote/route": "/api/v1/builder/promote",
+  "/api/voice/speak/route": "/api/voice/speak",
+  "/page": "/",
+  "/projects/[id]/board/page": "/projects/[id]/board",
+  "/projects/[id]/ledger/page": "/projects/[id]/ledger",
+  "/projects/[id]/room/page": "/projects/[id]/room",
+  "/projects/page": "/projects"
+}

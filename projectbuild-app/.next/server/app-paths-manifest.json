@@ -1,0 +1,21 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/agent/meeting/close/route": "app/api/agent/meeting/close/route.js",
+  "/api/agent/meeting/create/route": "app/api/agent/meeting/create/route.js",
+  "/api/agent/promote/route": "app/api/agent/promote/route.js",
+  "/api/agent/run/route": "app/api/agent/run/route.js",
+  "/api/agents/list/route": "app/api/agents/list/route.js",
+  "/api/agents/register/route": "app/api/agents/register/route.js",
+  "/api/ledger/item/[id]/route": "app/api/ledger/item/[id]/route.js",
+  "/api/ledger/items/route": "app/api/ledger/items/route.js",
+  "/api/ledger/ui/route": "app/api/ledger/ui/route.js",
+  "/api/v1/agents/run/stream/route": "app/api/v1/agents/run/stream/route.js",
+  "/api/v1/builder/promote/route": "app/api/v1/builder/promote/route.js",
+  "/api/voice/speak/route": "app/api/voice/speak/route.js",
+  "/page": "app/page.js",
+  "/projects/[id]/board/page": "app/projects/[id]/board/page.js",
+  "/projects/[id]/ledger/page": "app/projects/[id]/ledger/page.js",
+  "/projects/[id]/room/page": "app/projects/[id]/room/page.js",
+  "/projects/page": "app/projects/page.js"
+}

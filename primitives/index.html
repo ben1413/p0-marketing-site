@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Primitives - Project0</title>
+<title>Primitives — Project0</title>
 <meta name="description" content="Three primitives. Promote, Authority, Memory. The physics of the system.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,7 +24,6 @@
   --gray-2: #808080;
   --gray-3: #404040;
   --gray-4: #202020;
-  --amber: #d4a853;
   --shadow-card: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
   --shadow-hover: 0 4px 12px rgba(0,0,0,0.7), 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.11);
   --radius: 12px;
@@ -46,7 +45,7 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 200;
-  height: 110px;
+  height: 58px;
   padding: 0 52px;
   display: flex;
   align-items: center;
@@ -57,51 +56,22 @@ nav {
   border-bottom: 1px solid var(--border);
 }
 .nav-logo {
-  display: inline-flex;
-  align-items: center;
-  height: 90px;
-}
-.nav-logo img {
-  height: 90px;
-  width: auto;
-  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
 }
 .nav-right { display: flex; align-items: center; gap: 32px; }
 .nav-link { font-size: 13px; font-weight: 450; color: var(--gray-2); text-decoration: none; transition: color 0.15s; }
-.nav-link:hover { color: var(--white); }
-.nav-link.active { color: var(--amber); }
-.nav-link-amber { color: var(--gray-2); }
-.nav-link-amber:hover { color: var(--white); }
-.nav-link-amber.active { color: var(--amber); }
+.nav-link:hover, .nav-link.active { color: var(--white); }
 .nav-cta {
   font-size: 12px; font-weight: 600; color: var(--white); text-decoration: none;
   background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
   padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
 }
 .nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
-.nav-cta.active { color: var(--amber); border-color: rgba(212,168,83,0.5); background: rgba(212,168,83,0.08); }
-.nav-cta.active:hover { color: var(--amber); background: rgba(212,168,83,0.14); border-color: var(--amber); }
-
-.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 0; border: none; background: transparent; color: var(--white); cursor: pointer; z-index: 202; border-radius: var(--radius-sm); }
-.nav-toggle:hover { background: var(--card-2); }
-.nav-toggle span { display: block; width: 20px; height: 2px; background: currentColor; border-radius: 1px; transition: transform 0.25s, opacity 0.25s; }
-nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
-nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-.nav-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
-@media (max-width: 768px) {
-  .nav-toggle { display: flex; }
-  .nav-backdrop { display: block; }
-  .nav-right { position: fixed; top: 0; right: 0; width: min(280px, 85vw); height: 100vh; background: var(--black); flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 100px 24px 24px; gap: 0; box-shadow: -4px 0 24px rgba(0,0,0,0.5); transform: translateX(100%); transition: transform 0.25s ease; z-index: 201; border-left: 1px solid var(--border); }
-  .nav-right .nav-link, .nav-right .nav-cta { display: block; padding: 14px 0; border-bottom: 1px solid var(--border); border-radius: 0; }
-  .nav-right .nav-cta { background: transparent; box-shadow: none; }
-  nav.nav-open .nav-right { transform: translateX(0); }
-  nav.nav-open .nav-backdrop { opacity: 1; pointer-events: auto; }
-  body.nav-open { overflow: hidden; }
-}
-
-.nav-link-muted { font-size: 13px; font-weight: 450; color: var(--gray-3); cursor: default; opacity: 0.7; }
-.nav-link-muted .nav-soon { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; color: var(--gray-4); margin-left: 4px; vertical-align: middle; }
 .inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
 .label {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
@@ -109,14 +79,7 @@ nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(
   margin-bottom: 28px; display: block;
 }
 .prim-h { font-size: clamp(22px, 2.8vw, 38px); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 6px; line-height: 1.1; }
-.prim-sub { font-size: 14px; color: var(--amber); margin-bottom: 40px; }
-
-.prim-section-label {
-  font-family: var(--mono); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.22em; color: var(--gray-2); text-transform: uppercase;
-  margin-bottom: 28px; margin-top: 48px; display: block;
-}
-.prim-section-label:first-of-type { margin-top: 0; }
+.prim-sub { font-size: 14px; color: var(--gray-2); margin-bottom: 40px; }
 
 .prim-grid { display: flex; flex-direction: column; gap: 8px; }
 .prim-row {
@@ -135,16 +98,6 @@ nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(
 .prim-detail { font-size: 13px; color: var(--gray-2); line-height: 1.8; margin-bottom: 10px; }
 .prim-detail:last-of-type { margin-bottom: 0; }
 .prim-detail strong { color: var(--white); font-weight: 600; }
-.prim-not { font-size: 12px; color: var(--amber); font-style: italic; margin-top: 14px; line-height: 1.7; }
-.prim-modes { margin-top: 12px; }
-.prim-modes p { font-size: 12px; color: var(--gray-2); line-height: 1.75; margin-bottom: 8px; }
-.prim-modes p:last-child { margin-bottom: 0; }
-.prim-tiers { margin-top: 16px; }
-.prim-tier { margin-bottom: 14px; }
-.prim-tier-name { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; color: var(--white); margin-bottom: 4px; }
-.prim-tier-desc { font-size: 12px; color: var(--gray-2); line-height: 1.7; padding-left: 0; }
-.prim-close { font-size: 14px; font-weight: 600; color: var(--white); margin-top: 20px; line-height: 1.6; }
-.prim-agent-placeholder { display: none; }
 .prim-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
 .prim-tag {
   font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
@@ -152,69 +105,17 @@ nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(
   padding: 4px 11px; background: var(--near-black); box-shadow: var(--shadow-card);
 }
 
-/* Section 2 - THE CALLS */
-.prim-calls { margin-top: 56px; }
-.prim-calls-h { font-size: clamp(20px, 2.5vw, 28px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
-.prim-calls-sub { font-size: 14px; color: var(--gray-2); margin-bottom: 28px; line-height: 1.7; max-width: 520px; }
-.calls-grid { display: flex; flex-direction: column; gap: 12px; }
-.calls-row {
-  display: grid; grid-template-columns: 140px 1fr auto;
-  align-items: start; gap: 20px;
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 18px 24px; box-shadow: var(--shadow-card); font-family: var(--mono);
-}
-.calls-name { font-size: 12px; font-weight: 600; color: var(--white); letter-spacing: 0.04em; }
-.calls-desc { font-size: 13px; color: var(--amber); line-height: 1.65; }
-.calls-desc strong { color: var(--white); font-weight: 500; }
-.calls-route { font-size: 11px; color: var(--amber); letter-spacing: 0.02em; margin-top: 6px; }
-.prim-calls-cta {
-  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--amber); text-decoration: none;
-  display: inline-block; margin-top: 24px; transition: opacity 0.15s;
-}
-.prim-calls-cta:hover { opacity: 0.85; }
-.prim-calls-cta .prim-cta-url { color: var(--gray-3); font-weight: 500; letter-spacing: 0; margin-left: 6px; }
-
-/* Section 3 - THE BOUNDARY */
-.prim-boundary {
-  margin-top: 64px; padding: 56px 32px; text-align: center;
-  background: var(--near-black); border: 1px solid var(--border); border-radius: var(--radius);
-}
-.prim-boundary-h { font-size: clamp(22px, 2.8vw, 34px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.25; margin-bottom: 24px; max-width: 640px; margin-left: auto; margin-right: auto; }
-.prim-boundary-h .accent { color: var(--amber); }
-.prim-boundary-body { font-size: 15px; color: var(--gray-2); line-height: 1.85; max-width: 560px; margin: 0 auto 20px; }
-.prim-boundary-close { font-size: 16px; font-weight: 600; color: var(--amber); line-height: 1.6; }
-
-/* Footer CTA */
-.prim-footer-cta {
-  margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border);
-  text-align: center;
-}
-.prim-footer-cta-h { font-size: clamp(20px, 2.2vw, 26px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
-.prim-footer-cta-p { font-size: 14px; color: var(--gray-2); line-height: 1.75; margin-bottom: 24px; max-width: 440px; margin-left: auto; margin-right: auto; }
-.prim-footer-cta-links { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; }
-.prim-footer-cta .prim-cta-link {
-  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
-  color: var(--amber); text-decoration: none;
-  border: 1px solid rgba(212,168,83,0.4); border-radius: var(--radius-sm);
-  padding: 10px 18px; display: inline-block; transition: all 0.15s;
-}
-.prim-footer-cta .prim-cta-link:hover { background: rgba(212,168,83,0.1); border-color: var(--amber); }
-.prim-footer-cta .prim-cta-link.secondary { background: transparent; color: var(--white); border-color: var(--border-med); }
-.prim-footer-cta .prim-cta-link.secondary:hover { background: var(--card); color: var(--white); }
-
 footer {
   padding: 28px 52px;
   border-top: 1px solid var(--border); display: flex;
   align-items: center; justify-content: space-between; background: var(--black);
 }
-.footer-logo { display: block; margin-bottom: 6px; }
-.footer-logo img { height: 32px; width: auto; display: block; }
+.footer-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); display: block; margin-bottom: 3px; }
 .footer-tag { font-size: 12px; color: var(--gray-3); font-style: italic; }
-.footer-tag .footer-tag-amber { color: var(--amber); font-style: italic; }
 .footer-links { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
 .footer-link { font-size: 12px; color: var(--gray-3); text-decoration: none; transition: color 0.15s; }
 .footer-link:hover { color: var(--white); }
+.footer-infra { font-size: 11px; color: var(--gray-4); }
 
 @media (max-width: 860px) {
   nav { padding: 0 20px; }
@@ -222,14 +123,11 @@ footer {
   .prim-row { grid-template-columns: 1fr; }
   .prim-name-col { border-right: none; border-bottom: 1px solid var(--border); padding: 18px 20px; }
   .prim-body { padding: 20px; }
-  .calls-row { grid-template-columns: 1fr; }
-  .prim-boundary { padding: 40px 20px; }
   footer { flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px 20px; }
 }
 
 @media (max-width: 600px) {
-  nav { padding: 0 16px; height: 100px; }
-  .nav-logo, .nav-logo img { height: 70px; }
+  nav { padding: 0 16px; height: 52px; }
   .inner { padding: 72px 16px 48px; }
   .prim-h { font-size: clamp(20px, 5.5vw, 32px); }
   footer { padding: 20px 16px; gap: 12px; }
@@ -239,17 +137,11 @@ footer {
 </head>
 <body>
 
-<nav id="main-nav">
-  <a href="/" class="nav-logo" aria-label="Project0 home">
-    <img src="/logo.svg" alt="Project0">
-  </a>
-  <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-backdrop" aria-hidden="true"></div>
+<nav>
+  <a href="/" class="nav-logo">Project0</a>
   <div class="nav-right">
     <a href="/platform" class="nav-link">Platform</a>
     <a href="/primitives" class="nav-link active">Primitives</a>
-    <a href="/projectbuild" class="nav-link">ProjectBuild</a>
-    <a href="/projectcore" class="nav-cta">ProjectCore ↗</a>
     <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
   </div>
 </nav>
@@ -260,20 +152,17 @@ footer {
     <h1 class="prim-h">Three primitives.<br>Everything else is implementation.</h1>
     <p class="prim-sub">Not features. The physics of the system.</p>
 
-    <span class="prim-section-label">THE DOCTRINE</span>
     <div class="prim-grid">
       <div class="prim-row">
         <div class="prim-name-col"><span class="prim-name">PROMOTE</span></div>
         <div class="prim-body">
           <p class="prim-one">Atomic commit for decisions. The line between thinking and deciding.</p>
           <p class="prim-detail">A commitment event with actor, authority, evidence, and timestamp declared at the moment it happens. If it is not promoted, it is allowed to fade.</p>
-          <p class="prim-detail">Every Promote event generates a ledger item, a memory summary index, and an audit trace. Three subsystems connected by one boundary.</p>
           <div class="prim-tags">
             <span class="prim-tag">Project → Ledger</span>
             <span class="prim-tag">Team → Memory</span>
             <span class="prim-tag">Personal → Working</span>
           </div>
-          <p class="prim-not">Promote is not logging. Logging captures what happened. Promote declares what was decided - and who was responsible.</p>
         </div>
       </div>
       <div class="prim-row">
@@ -281,17 +170,10 @@ footer {
         <div class="prim-body">
           <p class="prim-one">Every decision records who was responsible and under what scope.</p>
           <p class="prim-detail">Delegation is explicit. Scope is declared. Duration is recorded. Project0 does not pretend AI decisions are neutral.</p>
-          <p class="prim-detail">Every authority record carries: actor identity, authority mode, scope boundaries, delegation chain, and timestamp. Nothing is inferred after the fact.</p>
           <div class="prim-tags">
             <span class="prim-tag">Human-Led</span>
             <span class="prim-tag">Human-in-the-Loop</span>
             <span class="prim-tag">Agent-Autonomous</span>
-          </div>
-          <div class="prim-modes">
-            <p><strong>Human-Led</strong> - a human made this call.</p>
-            <p><strong>Human-in-the-Loop</strong> - a human reviewed and committed.</p>
-            <p><strong>Agent-Autonomous</strong> - an agent acted within a declared, scoped delegation.</p>
-            <p>No mode is assumed. Every mode is declared.</p>
           </div>
         </div>
       </div>
@@ -299,89 +181,9 @@ footer {
         <div class="prim-name-col"><span class="prim-name">MEMORY</span></div>
         <div class="prim-body">
           <p class="prim-one">Immutable record of what actually happened.</p>
-          <p class="prim-detail"><strong>Ledger</strong> - immutable. Append-only. Cannot be edited. Cannot be erased. <strong>Brain</strong> - mutable. Operational. Supersession is allowed. Silent edits are not.</p>
+          <p class="prim-detail"><strong>Ledger</strong> — immutable. Append-only. Cannot be edited. Cannot be erased. <strong>Brain</strong> — mutable. Operational. Supersession is allowed. Silent edits are not.</p>
           <p class="prim-detail"><strong>Promote is the boundary.</strong> Core memory is durable and accountable. Working memory is useful and disposable.</p>
-          <div class="prim-tiers">
-            <div class="prim-tier">
-              <div class="prim-tier-name">EPHEMERAL</div>
-              <p class="prim-tier-desc">Active context window. Exists to reason, not to remember. If not promoted, it fades. Intentional.</p>
-            </div>
-            <div class="prim-tier">
-              <div class="prim-tier-name">BRAIN</div>
-              <p class="prim-tier-desc">Working memory. Mutable via supersession. Where agents and humans collaborate and correct. Not the system of record.</p>
-            </div>
-            <div class="prim-tier">
-              <div class="prim-tier-name">LEDGER</div>
-              <p class="prim-tier-desc">Core memory. Immutable. Append-only. Authority-attributed. Tamper-evident. The institutional spine.</p>
-            </div>
-          </div>
-          <div class="prim-agent-placeholder" data-feature="agent-classification">
-            <p class="prim-tier-name" style="margin-top:20px;">AGENT IDENTITY CLASSIFICATION</p>
-            <p class="prim-tier-desc">Placeholder: Known / Inferred / Unknown framework. Fill in with technical answers from Core before shipping.</p>
-          </div>
-          <p class="prim-close">Memory is not storage. Memory is accountability across time.</p>
         </div>
-      </div>
-    </div>
-
-    <span class="prim-section-label">THE CALLS</span>
-    <div class="prim-calls">
-      <h2 class="prim-calls-h">Five calls.<br>One governance boundary.</h2>
-      <p class="prim-calls-sub">Every operation in Project0 maps to one of these. If you understand the doctrine, the API follows naturally.</p>
-      <div class="calls-grid">
-        <div class="calls-row">
-          <span class="calls-name">run()</span>
-          <div>
-            <p class="calls-desc">Execute an agent with governed context. Every run is persisted. Every trace is attributable.</p>
-            <p class="calls-route">POST /api/v1/agents/run</p>
-          </div>
-        </div>
-        <div class="calls-row">
-          <span class="calls-name">promote()</span>
-          <div>
-            <p class="calls-desc">Commit a decision across the governance boundary. The line between thinking and deciding.</p>
-            <p class="calls-route">POST /api/v1/ledger/promote</p>
-          </div>
-        </div>
-        <div class="calls-row">
-          <span class="calls-name">delegate()</span>
-          <div>
-            <p class="calls-desc">Grant authority to an agent with explicit scope. Duration recorded. Delegation traceable.</p>
-            <p class="calls-route">POST /api/v1/authority/delegations</p>
-          </div>
-        </div>
-        <div class="calls-row">
-          <span class="calls-name">evaluate()</span>
-          <div>
-            <p class="calls-desc">Open a bounded decision window. Close it. Seal it. Hand it to anyone who asks.</p>
-            <p class="calls-route">POST /api/v1/evaluations</p>
-          </div>
-        </div>
-        <div class="calls-row">
-          <span class="calls-name">halt()</span>
-          <div>
-            <p class="calls-desc">Stop execution when governance rules trigger. Suspend. Resume. Every trigger recorded.</p>
-            <p class="calls-route">POST /api/v1/agents/:id/halt</p>
-          </div>
-        </div>
-      </div>
-      <a href="/docs/core" class="prim-calls-cta">VIEW FULL API DOCS →<span class="prim-cta-url">Developer docs</span></a>
-    </div>
-
-    <span class="prim-section-label">WHY THIS MATTERS</span>
-    <div class="prim-boundary">
-      <h2 class="prim-boundary-h">Most systems separate<br>thinking from doing.<br>We separate thinking from <span class="accent">deciding.</span></h2>
-      <p class="prim-boundary-body">Thinking is cheap. Deciding is consequential. Every agent in Project0 can think - reason, draft, suggest, analyze - without committing anything. The moment it promotes, it has decided. That decision carries a record, an authority declaration, and an audit trail.</p>
-      <p class="prim-boundary-body">That boundary is the system. Everything else is implementation.</p>
-      <p class="prim-boundary-close">Promote is not a feature.<br>It is a protocol boundary.</p>
-    </div>
-
-    <div class="prim-footer-cta">
-      <h2 class="prim-footer-cta-h">Ready to build on the primitives?</h2>
-      <p class="prim-footer-cta-p">The API is documented. The integration path is clear. One control plane. Five calls. Every surface inherits the same rails.</p>
-      <div class="prim-footer-cta-links">
-        <a href="/docs/core" class="prim-cta-link">VIEW THE API →</a>
-        <a href="mailto:hello@project0.io?subject=Building%20on%20primitives" class="prim-cta-link secondary">IF YOU'RE BUILDING AT THIS LAYER - LET'S TALK →</a>
       </div>
     </div>
   </div>
@@ -389,24 +191,16 @@ footer {
 
 <footer>
   <div>
-    <a href="/" class="footer-logo" aria-label="Project0 home"><img src="/logo.svg" alt="Project0"></a>
-    <span class="footer-tag">From nothing, <span class="footer-tag-amber">create something.</span></span>
+    <span class="footer-logo">Project0</span>
+    <span class="footer-tag">From nothing, create something.</span>
   </div>
   <div class="footer-links">
-    <a href="/docs/core" class="footer-link">Developer docs</a>
+    <a href="https://projectledger.io" class="footer-link" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
     <a href="mailto:hello@project0.io" class="footer-link">hello@project0.io</a>
+    <a href="/" class="footer-link">← Home</a>
+    <span class="footer-infra">ProjectLedger is built on Project0 infrastructure.</span>
   </div>
 </footer>
-<script>
-(function(){
-  var nav=document.getElementById('main-nav');
-  if(!nav)return;
-  var btn=nav.querySelector('.nav-toggle'), back=nav.querySelector('.nav-backdrop'), links=nav.querySelectorAll('.nav-right a');
-  function close(){ nav.classList.remove('nav-open'); document.body.classList.remove('nav-open'); if(btn)btn.setAttribute('aria-expanded','false'); }
-  if(btn)btn.addEventListener('click',function(){ nav.classList.contains('nav-open')?close():(nav.classList.add('nav-open'),document.body.classList.add('nav-open'),btn.setAttribute('aria-expanded','true')); });
-  if(back)back.addEventListener('click',close);
-  links.forEach(function(a){ a.addEventListener('click',close); });
-})();
-</script>
+
 </body>
 </html>

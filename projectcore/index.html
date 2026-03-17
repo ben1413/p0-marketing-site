@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ProjectCore - Project0</title>
-<meta name="description" content="The control plane for human-and-agent systems that need to be accountable. Runtime, memory, governance, evaluation, and ledger infrastructure.">
+<meta name="description" content="ProjectCore is the API-only control plane for governed AI systems. Runtime, memory, governance, evaluation, ledger, and observability.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -52,8 +52,6 @@ nav {
   padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
 }
 .nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
-.nav-cta.active { color: var(--amber); border-color: rgba(212,168,83,0.5); background: rgba(212,168,83,0.08); }
-.nav-cta.active:hover { color: var(--amber); background: rgba(212,168,83,0.14); border-color: var(--amber); }
 
 .nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 0; border: none; background: transparent; color: var(--white); cursor: pointer; z-index: 202; border-radius: var(--radius-sm); }
 .nav-toggle:hover { background: var(--card-2); }
@@ -74,16 +72,13 @@ nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(
 }
 
 .inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
-
-/* Hero */
 .pc-hero { padding-top: 20px; }
 .pc-label {
   font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--muted); margin-bottom: 28px; display: block;
 }
-.pc-label .live-badge { color: var(--amber); }
-.pc-h { font-size: clamp(36px, 4.8vw, 56px); font-weight: 800; letter-spacing: -0.032em; line-height: 1.06; margin-bottom: 16px; }
-.pc-sub { font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 20px; line-height: 1.4; }
+.pc-h { font-size: clamp(36px, 4.8vw, 56px); font-weight: 800; letter-spacing: -0.032em; line-height: 1.06; margin-bottom: 18px; }
+.pc-sub { font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 20px; line-height: 1.45; max-width: 700px; }
 .pc-body { font-size: 16px; color: var(--gray-1); line-height: 1.8; max-width: 620px; margin-bottom: 32px; }
 .pc-cta {
   display: inline-flex; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
@@ -91,74 +86,58 @@ nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(
   padding: 14px 24px; margin-right: 12px; margin-bottom: 8px; transition: all 0.15s;
 }
 .pc-cta:hover { background: rgba(212,168,83,0.12); border-color: var(--amber); }
+.pc-cta.secondary { color: var(--gray-1); border-color: var(--border-med); }
+.pc-cta.secondary:hover { color: var(--white); border-color: var(--white); background: transparent; }
 
-/* Section labels */
 .pc-section-label {
   font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 32px; margin-top: 80px; display: block;
+  color: var(--muted); margin-bottom: 32px; margin-top: 88px; display: block;
 }
-.pc-section-label:first-of-type { margin-top: 0; }
-.pc-hero + .pc-section-label { margin-top: 96px; }
-.pc-section-h { font-size: clamp(22px, 2.8vw, 32px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 40px; }
-
-/* Feature rows (What it is) - match ProjectBuild */
-.pc-feature-grid { display: grid; gap: 0; margin-top: 32px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); }
-.pc-feature-row { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; padding: 24px 28px; border-bottom: 1px solid var(--border); background: var(--card); }
+.pc-feature-grid { display: grid; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); }
+.pc-feature-row { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: start; padding: 24px 28px; border-bottom: 1px solid var(--border); background: var(--card); }
 .pc-feature-row:nth-child(odd) { background: var(--card-2); }
 .pc-feature-row:last-child { border-bottom: none; }
-.pc-feature-label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--white); }
-.pc-feature-label.amber { color: var(--amber); }
-.pc-feature-desc { font-size: 14px; color: var(--gray-1); line-height: 1.7; }
+.pc-feature-label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--white); }
+.pc-feature-desc { font-size: 14px; color: var(--gray-1); line-height: 1.75; max-width: 720px; }
 
-/* Who it's for - 4 cards */
-.pc-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
-.pc-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 26px; box-shadow: var(--shadow-card); transition: all 0.2s; }
+.pc-code-note {
+  font-family: var(--mono); font-size: 12px; color: var(--gray-2);
+  margin-bottom: 18px; letter-spacing: 0.02em;
+}
+.pc-route-box {
+  background: var(--black); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card); padding: 20px 24px; margin-bottom: 18px;
+}
+.pc-route-table {
+  width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12px; color: var(--gray-1);
+}
+.pc-route-table td { padding: 7px 0; border-bottom: 1px solid var(--border); }
+.pc-route-table tr:last-child td { border-bottom: none; }
+.pc-route-table td:first-child { color: var(--white); width: 180px; letter-spacing: 0.02em; }
+.pc-route-table td:last-child { color: var(--gray-2); }
+.pc-code-close { font-size: 14px; color: var(--gray-1); line-height: 1.7; max-width: 700px; }
+
+.pc-entry-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); }
+.pc-entry-card { background: var(--card); padding: 34px 30px; }
+.pc-entry-card + .pc-entry-card { border-left: 1px solid var(--border); background: var(--card-2); }
+.pc-entry-title { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--white); margin-bottom: 14px; }
+.pc-entry-body { font-size: 14px; color: var(--gray-1); line-height: 1.75; margin-bottom: 20px; max-width: 430px; }
+.pc-entry-link { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); text-decoration: none; }
+.pc-entry-link:hover { opacity: 0.85; }
+
+.pc-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.pc-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 24px; box-shadow: var(--shadow-card); transition: all 0.2s; }
 .pc-card:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); }
-.pc-card-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.pc-card-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; line-height: 1.4; }
 .pc-card-p { font-size: 13px; color: var(--gray-1); line-height: 1.75; }
 
-/* What it's not - 4 columns */
-.pc-not-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-top: 32px; margin-bottom: 8px; }
-.pc-section-label + .pc-not-grid { margin-top: 80px; }
-.pc-not-col { text-align: center; padding: 8px 0; }
-.pc-not-title { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; line-height: 1.4; }
-.pc-not-rule { width: 100%; height: 1px; background: var(--border); margin-bottom: 18px; }
-.pc-not-p { font-size: 12px; color: var(--gray-2); line-height: 1.8; }
-
-/* Primitives - match /primitives THE CALLS */
-.pc-prim-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
-.pc-prim-row {
-  display: grid; grid-template-columns: 140px 1fr auto;
-  align-items: start; gap: 20px;
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 18px 24px; box-shadow: var(--shadow-card); font-family: var(--mono);
+.pc-close {
+  margin-top: 88px; padding: 72px 40px; text-align: center;
+  background: var(--black); border: 1px solid var(--border); border-radius: var(--radius);
 }
-.pc-prim-name { font-size: 12px; font-weight: 600; color: var(--white); letter-spacing: 0.04em; }
-.pc-prim-name.amber { color: var(--amber); }
-.pc-prim-desc { font-size: 13px; color: var(--gray-2); line-height: 1.65; }
-.pc-prim-route { font-size: 11px; color: var(--gray-3); letter-spacing: 0.02em; margin-top: 6px; }
-.pc-prim-cta {
-  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--amber); text-decoration: none;
-  display: inline-block; margin-top: 24px; transition: opacity 0.15s;
-}
-.pc-prim-cta:hover { opacity: 0.85; }
-.pc-prim-cta .pc-cta-url { color: var(--gray-3); font-weight: 500; letter-spacing: 0; margin-left: 6px; }
+.pc-close-quote { font-size: clamp(30px, 4.5vw, 58px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; max-width: 900px; margin: 0 auto 32px; }
+.pc-close-links { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; }
 
-/* Built for Real Systems */
-.pc-proof-strip { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--muted); line-height: 1.8; margin-top: 28px; margin-bottom: 8px; }
-.pc-body-accent { color: var(--amber); }
-
-/* Final CTA section */
-.pc-cta-section { margin-top: 88px; padding: 64px 40px; text-align: center; background: var(--black); border: 1px solid var(--border); border-radius: var(--radius); }
-.pc-cta-h { font-size: clamp(24px, 3.2vw, 36px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 20px; }
-.pc-cta-p { font-size: 15px; color: var(--gray-1); line-height: 1.8; max-width: 480px; margin: 0 auto 32px; }
-.pc-cta-links { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; }
-.pc-cta-dev { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 20px; }
-.pc-cta-dev a { color: var(--gray-1); text-decoration: none; }
-.pc-cta-dev a:hover { color: var(--white); }
-
-/* Footer */
 footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--black); }
 .footer-logo { display: block; margin-bottom: 6px; }
 .footer-logo img { height: 32px; width: auto; display: block; }
@@ -170,22 +149,25 @@ footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex;
 
 @media (max-width: 960px) {
   .pc-cards { grid-template-columns: repeat(2, 1fr); }
-  .pc-not-grid { grid-template-columns: repeat(2, 1fr); }
+  .pc-entry-grid { grid-template-columns: 1fr; }
+  .pc-entry-card + .pc-entry-card { border-left: none; border-top: 1px solid var(--border); }
 }
 @media (max-width: 860px) {
   nav { padding: 0 20px; }
   .inner { padding: 80px 20px 60px; }
   .pc-feature-row { grid-template-columns: 1fr; }
   .pc-cards { grid-template-columns: 1fr; }
-  .pc-not-grid { grid-template-columns: 1fr; }
-  .pc-prim-row { grid-template-columns: 1fr; }
+  .pc-route-table td:first-child { width: 140px; }
   footer { flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px 20px; }
 }
 @media (max-width: 600px) {
   nav { padding: 0 16px; height: 100px; }
   .nav-logo, .nav-logo img { height: 70px; }
   .inner { padding: 72px 16px 48px; }
-  .pc-cta-section { padding: 40px 20px; }
+  .pc-close { padding: 44px 20px; }
+  .pc-route-box { padding: 16px; }
+  .pc-route-table { font-size: 11px; }
+  .pc-route-table td:first-child { width: 120px; }
   footer { padding: 20px 16px; gap: 12px; }
 }
 </style>
@@ -200,7 +182,7 @@ footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex;
     <a href="/platform" class="nav-link">Platform</a>
     <a href="/primitives" class="nav-link">Primitives</a>
     <a href="/projectbuild" class="nav-link nav-link-amber">ProjectBuild</a>
-    <a href="/projectcore" class="nav-cta active">ProjectCore ↗</a>
+    <a href="/projectcore" class="nav-link nav-link-amber active">ProjectCore</a>
     <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
   </div>
 </nav>
@@ -208,177 +190,106 @@ footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex;
 <main>
   <div class="inner">
     <section class="pc-hero">
-      <span class="pc-label">CORE PLATFORM · <span class="live-badge">LIVE NOW</span></span>
-      <h1 class="pc-h">The control plane for<br>human-and-agent systems<br>that need to be accountable.</h1>
-      <p class="pc-body">Runtime, memory, governance, evaluation, and ledger infrastructure for teams building with AI in real environments. Run agents, manage authority, evaluate behavior, seal decisions, export audit trails, and keep institutional memory intact - across every workflow and every surface built on top.</p>
-      <a href="/docs/core" class="pc-cta">VIEW API DOCS →</a>
-      <a href="mailto:hello@project0.io?subject=ProjectCore%20Access" class="pc-cta">REQUEST ACCESS →</a>
+      <span class="pc-label">THE ENGINE</span>
+      <h1 class="pc-h">ProjectCore</h1>
+      <p class="pc-sub">The API-only control plane.<br>Agent runtime, memory, governance, evaluation, ledger, and observability - versioned and production-ready.</p>
+      <p class="pc-body">This is not a UI product.<br>This is the infrastructure layer.</p>
+      <a href="/docs/core" class="pc-cta">VIEW THE API →</a>
+      <a href="mailto:hello@project0.io" class="pc-cta secondary">hello@project0.io</a>
     </section>
 
-    <span class="pc-section-label">WHAT IT IS</span>
-    <h2 class="pc-section-h">The backend system that makes<br>AI work accountable.</h2>
+    <span class="pc-section-label">WHAT CORE PROVIDES</span>
     <div class="pc-feature-grid">
       <div class="pc-feature-row">
         <span class="pc-feature-label">AGENT RUNTIME</span>
-        <p class="pc-feature-desc">Run single and multi-agent workflows on shared infrastructure. Core handles orchestration, cognitive preload, memory context, action gating, and run records.</p>
+        <p class="pc-feature-desc">Register agents. Define principles. Scope authority. Execute runs with full trace persistence. Every invocation is attributable. Nothing runs without a record.</p>
       </div>
       <div class="pc-feature-row">
-        <span class="pc-feature-label">GOVERNANCE GATE</span>
-        <p class="pc-feature-desc">Every action passes through deterministic policy enforcement. Permissions, restrictions, human acknowledgment rules - enforced and recorded.</p>
+        <span class="pc-feature-label">MEMORY</span>
+        <p class="pc-feature-desc">Three tiers. One boundary. Ephemeral context fades by design. Brain is mutable working memory - supersession-based, never silent edits. Ledger is immutable, append-only, tamper-evident. Promote is the only path across.</p>
+      </div>
+      <div class="pc-feature-row">
+        <span class="pc-feature-label">GOVERNANCE</span>
+        <p class="pc-feature-desc">Rules that execute, not documents that sit. Halt, suspend, resume - all recorded. Authority modes declared at commit time, never inferred after the fact.</p>
       </div>
       <div class="pc-feature-row">
         <span class="pc-feature-label">EVALUATION ENGINE</span>
-        <p class="pc-feature-desc">Create evaluations, close decision windows, run agent assessments, and review results. Built for real operational oversight, not demo environments.</p>
+        <p class="pc-feature-desc">Open a bounded decision window. Run agents against real decisions. Close it. Seal it. The artifact is independently verifiable by anyone who asks.</p>
       </div>
       <div class="pc-feature-row">
-        <span class="pc-feature-label">AUTHORITY + CONTROL</span>
-        <p class="pc-feature-desc">Make authority explicit. Delegate agent authority, require human oversight where needed, and halt, suspend, or resume agents when behavior crosses a boundary.</p>
+        <span class="pc-feature-label">LEDGER</span>
+        <p class="pc-feature-desc">Append-only. Tamper-evident. Authority-attributed at the moment of commitment. Not a log. A system of record.</p>
       </div>
       <div class="pc-feature-row">
-        <span class="pc-feature-label amber">LEDGER + PROMOTE</span>
-        <p class="pc-feature-desc">Move from mutable work into durable history. Promote records the commitment boundary with actor attribution, authority mode, integrity metadata, and truth posture.</p>
-      </div>
-      <div class="pc-feature-row">
-        <span class="pc-feature-label">ARTIFACTS + AUDIT</span>
-        <p class="pc-feature-desc">Generate sealed artifacts for closed evaluations. Export audit trails in a format built for review, defensibility, and downstream trust.</p>
+        <span class="pc-feature-label">OBSERVABILITY</span>
+        <p class="pc-feature-desc">Run records. Execution traces. System event log. Audit export. Model registry with cost attribution. Everything replayable. Everything debuggable.</p>
       </div>
     </div>
 
-    <span class="pc-section-label">WHO IT'S FOR</span>
+    <span class="pc-section-label">THE API SURFACE</span>
+    <p class="pc-code-note">~60 routes across 15 domains.</p>
+    <div class="pc-route-box">
+      <table class="pc-route-table">
+        <tr><td>Agents</td><td>/api/v1/agents/</td></tr>
+        <tr><td>Ledger</td><td>/api/v1/ledger/</td></tr>
+        <tr><td>Brain</td><td>/api/v1/brain/</td></tr>
+        <tr><td>Evaluations</td><td>/api/v1/evaluations/</td></tr>
+        <tr><td>Authority</td><td>/api/v1/authority/</td></tr>
+        <tr><td>Governance</td><td>/api/v1/governance/</td></tr>
+        <tr><td>Artifacts</td><td>/api/v1/artifacts/</td></tr>
+        <tr><td>Runs</td><td>/api/v1/runs/</td></tr>
+        <tr><td>Models</td><td>/api/v1/models/</td></tr>
+        <tr><td>Events</td><td>/api/v1/events/</td></tr>
+        <tr><td>Audit</td><td>/api/v1/audit/</td></tr>
+        <tr><td>Tenants</td><td>/api/v1/tenants/</td></tr>
+        <tr><td>Memory</td><td>/api/v1/memory/</td></tr>
+        <tr><td>Sessions</td><td>/api/v1/sessions/</td></tr>
+        <tr><td>Webhooks</td><td>/api/v1/webhooks/</td></tr>
+      </table>
+    </div>
+    <p class="pc-code-close">Versioned. Documented. Built to outlast any model vendor.</p>
+
+    <span class="pc-section-label">TWO ENTRY POINTS</span>
+    <div class="pc-entry-grid">
+      <div class="pc-entry-card">
+        <p class="pc-entry-title">BUILD ON CORE DIRECTLY</p>
+        <p class="pc-entry-body">API-only. Full control. You architect the surface. The primitives are yours to compose. For developers and platform teams building from the infrastructure layer up.</p>
+        <a href="/docs/core" class="pc-entry-link">VIEW THE API →</a>
+      </div>
+      <div class="pc-entry-card">
+        <p class="pc-entry-title">BUILD IN PROJECTBUILD</p>
+        <p class="pc-entry-body">The governed UI surface of ProjectCore. Multi-human, multi-agent collaboration without the API-only route. Same rails. Different on-ramp.</p>
+        <a href="/projectbuild" class="pc-entry-link">VIEW PROJECTBUILD →</a>
+      </div>
+    </div>
+
+    <span class="pc-section-label">WHO BUILDS ON CORE</span>
     <div class="pc-cards">
       <div class="pc-card">
-        <span class="pc-card-label">SURFACE TEAMS</span>
-        <p class="pc-card-p">Build products like ProjectBuild, ProjectLedger, or customer-specific surfaces without rebuilding runtime, governance, memory, and ledger infrastructure from scratch.</p>
+        <p class="pc-card-label">DEVELOPERS</p>
+        <p class="pc-card-p">Building AI-native applications that need governance from day one, not bolted on after the first incident.</p>
       </div>
       <div class="pc-card">
-        <span class="pc-card-label">AI-NATIVE STARTUPS</span>
-        <p class="pc-card-p">Ship faster with one backend system for agents, memory, evaluations, and decision records - instead of stitching together model calls, logs, and custom policy code.</p>
+        <p class="pc-card-label">SYSTEMS THINKERS</p>
+        <p class="pc-card-p">Architects who understand why the control plane matters before the surface is built.</p>
       </div>
       <div class="pc-card">
-        <span class="pc-card-label">ENTERPRISE OPERATORS</span>
-        <p class="pc-card-p">Run governed agent systems with explicit authority, durable records, evaluation workflows, and audit-ready exports across teams and business units.</p>
+        <p class="pc-card-label">PLATFORM TEAMS</p>
+        <p class="pc-card-p">Organizations building internal AI surfaces that need shared rails - not a different governance system per product.</p>
       </div>
       <div class="pc-card">
-        <span class="pc-card-label">PLATFORM BUILDERS</span>
-        <p class="pc-card-p">Use Core as the shared substrate beneath multiple apps, tenants, or operating surfaces while keeping policy, memory, and decision infrastructure centralized.</p>
+        <p class="pc-card-label">TEAMS THAT CANNOT AFFORD TO GET IT WRONG</p>
+        <p class="pc-card-p">Regulated industries. High-stakes decisions. Anywhere an AI mistake has a real cost.</p>
       </div>
     </div>
 
-    <span class="pc-section-label">WHAT IT'S NOT</span>
-    <div class="pc-not-grid">
-      <div class="pc-not-col">
-        <div class="pc-not-title">NOT AN LLM PROVIDER</div>
-        <div class="pc-not-rule"></div>
-        <p class="pc-not-p">Not a foundation model. Not a chat wrapper. Core sits above the models as the operating infrastructure that governs how they run.</p>
+    <section class="pc-close">
+      <h2 class="pc-close-quote">"The product is not the model.<br>The product is the system that<br>makes the model trustworthy."</h2>
+      <div class="pc-close-links">
+        <a href="/docs/core" class="pc-cta">VIEW THE API →</a>
+        <a href="mailto:hello@project0.io?subject=ProjectCore%20Integration" class="pc-cta secondary">IF YOU'RE BUILDING AT THIS LAYER - LET'S TALK →</a>
       </div>
-      <div class="pc-not-col">
-        <div class="pc-not-title">NOT JUST AN API</div>
-        <div class="pc-not-rule"></div>
-        <p class="pc-not-p">An application control plane: runtime, governance, memory, evaluation, ledger, audit, and authority - working together as one system.</p>
-      </div>
-      <div class="pc-not-col">
-        <div class="pc-not-title">NOT A SURFACE PRODUCT</div>
-        <div class="pc-not-rule"></div>
-        <p class="pc-not-p">ProjectBuild is where teams interact. ProjectLedger is where decisions are reviewed. Core is the engine that powers both.</p>
-      </div>
-      <div class="pc-not-col">
-        <div class="pc-not-title">NOT AUTONOMY WITHOUT CONTROLS</div>
-        <div class="pc-not-rule"></div>
-        <p class="pc-not-p">Core is designed around bounded authority, visible evaluations, explicit uncertainty, and durable records. Accountable systems, not black-box automation.</p>
-      </div>
-    </div>
-
-    <span class="pc-section-label">THE PRIMITIVES</span>
-    <h2 class="pc-section-h">Every surface inherits these.<br>Call them directly if you're building your own.</h2>
-    <div class="pc-prim-grid">
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">run()</span>
-        <div>
-          <p class="pc-prim-desc">Execute an agent with governed context. Every run is persisted. Every trace is attributable.</p>
-          <p class="pc-prim-route">POST /api/v1/agents/run</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name amber">promote()</span>
-        <div>
-          <p class="pc-prim-desc">Commit a decision across the governance boundary. The line between thinking and deciding.</p>
-          <p class="pc-prim-route">POST /api/v1/ledger/promote</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">create_evaluation()</span>
-        <div>
-          <p class="pc-prim-desc">Open a bounded decision window.</p>
-          <p class="pc-prim-route">POST /api/v1/evaluations</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">close_evaluation()</span>
-        <div>
-          <p class="pc-prim-desc">Close the decision window. Ready to seal.</p>
-          <p class="pc-prim-route">POST /api/v1/evaluations/:id/close</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">delegate()</span>
-        <div>
-          <p class="pc-prim-desc">Grant authority to an agent with explicit scope. Duration recorded. Delegation traceable.</p>
-          <p class="pc-prim-route">POST /api/v1/authority/delegations</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">halt()</span>
-        <div>
-          <p class="pc-prim-desc">Stop execution when governance rules trigger.</p>
-          <p class="pc-prim-route">POST /api/v1/agents/:id/halt</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">suspend()</span>
-        <div>
-          <p class="pc-prim-desc">Suspend future runs for an agent.</p>
-          <p class="pc-prim-route">POST /api/v1/agents/:id/suspend</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">resume()</span>
-        <div>
-          <p class="pc-prim-desc">Re-enable runs for a suspended agent.</p>
-          <p class="pc-prim-route">POST /api/v1/agents/:id/resume</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">generate_artifact()</span>
-        <div>
-          <p class="pc-prim-desc">Seal a closed evaluation into Artifact 5.</p>
-          <p class="pc-prim-route">POST /api/v1/artifacts/generate</p>
-        </div>
-      </div>
-      <div class="pc-prim-row">
-        <span class="pc-prim-name">export_audit()</span>
-        <div>
-          <p class="pc-prim-desc">Export a structured, independently verifiable audit trail for any evaluation.</p>
-          <p class="pc-prim-route">POST /api/v1/audit/export</p>
-        </div>
-      </div>
-    </div>
-    <a href="/docs/core" class="pc-prim-cta">VIEW FULL API DOCS →<span class="pc-cta-url">Developer docs</span></a>
-
-    <span class="pc-section-label">BUILT FOR REAL SYSTEMS</span>
-    <h2 class="pc-section-h">Infrastructure for teams that<br>need trust, not just output.</h2>
-    <p class="pc-body">When AI moves from demos into operations, the problem stops being generation and becomes control. Who acted. What authority they had. What memory they used. Whether the result was known, inferred, or uncertain. Whether the decision can be reviewed later.</p>
-    <p class="pc-body"><span class="pc-body-accent">ProjectCore is built for that layer.</span></p>
-    <p class="pc-proof-strip">60+ versioned API routes · Immutable ledger · Persistent run records · Governance rule registry · Evaluation engine · System event log · Model registry · Per-project tenant isolation · Audit export</p>
-
-    <div class="pc-cta-section">
-      <h2 class="pc-cta-h">Build on the engine,<br>not around it.</h2>
-      <p class="pc-cta-p">If you are building a governed AI product, an internal operating surface, or a multi-agent system that needs memory, authority, evaluation, and auditability - ProjectCore gives you the control plane already running underneath.</p>
-      <div class="pc-cta-links">
-        <a href="/docs/core" class="pc-cta">VIEW API DOCS →</a>
-        <a href="mailto:hello@project0.io?subject=ProjectCore%20Access" class="pc-cta">REQUEST ACCESS →</a>
-      </div>
-      <p class="pc-cta-dev">Already integrating? Start with POST /api/v1/agents/run/simple - the fastest path to a working integration.</p>
-    </div>
+    </section>
   </div>
 </main>
 

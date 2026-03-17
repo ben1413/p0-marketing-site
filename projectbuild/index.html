@@ -108,9 +108,10 @@ nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(
 .pb-what-col.right { background: var(--card-2); border-left: 1px solid var(--border); }
 .pb-what-p { font-size: 14px; color: var(--gray-1); line-height: 1.78; margin-bottom: 14px; }
 .pb-what-p:last-child { margin-bottom: 0; }
-.pb-cap-list { list-style: none; display: flex; flex-direction: column; gap: 9px; font-family: var(--mono); font-size: 12px; color: var(--gray-2); line-height: 1.6; }
-.pb-cap-list li { border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-.pb-cap-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.pb-cap-pre {
+  font-family: var(--mono); font-size: 12px; color: var(--gray-2); line-height: 1.8;
+  white-space: pre-wrap; margin: 0;
+}
 
 .pb-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .pb-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 24px; box-shadow: var(--shadow-card); transition: all 0.2s; }
@@ -181,7 +182,7 @@ footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex;
       <h1 class="pb-h">ProjectBuild</h1>
       <p class="pb-sub">Multi-human, multi-agent collaboration.<br>Shared governance. Shared memory.<br>Every decision recorded.</p>
       <p class="pb-body">You already know what it feels like when AI doesn't work in production. Context lost between sessions. No record of what was decided. Agents that can't be trusted past the demo. Wrappers that collapse under real operational load.</p>
-      <p class="pb-body">ProjectBuild is the workspace for teams that need AI to work like a system - not a experiment. Built on ProjectCore rails. No API integration required.</p>
+      <p class="pb-body">ProjectBuild is the workspace for teams that need AI to work like a system - not an experiment. Built on ProjectCore rails. No API integration required.</p>
       <a href="mailto:hello@project0.io?subject=ProjectBuild" class="pb-cta">IF THIS IS YOUR PROBLEM - LET'S TALK →</a>
     </section>
 
@@ -209,16 +210,14 @@ footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex;
         <p class="pb-what-p">Built on ProjectCore. Every team gets the same rails that power ProjectLedger. No integration required.</p>
       </div>
       <div class="pb-what-col right">
-        <ul class="pb-cap-list">
-          <li>Persistent agent memory across sessions</li>
-          <li>Authority declared at every decision</li>
-          <li>Immutable record of what was committed</li>
-          <li>Multi-human, multi-agent collaboration</li>
-          <li>Governance rules enforced at runtime</li>
-          <li>Halt and resume when rules trigger</li>
-          <li>Sealed artifacts on demand</li>
-          <li>One workspace. Every surface. Same rails.</li>
-        </ul>
+        <pre class="pb-cap-pre">Persistent agent memory across sessions
+Authority declared at every decision
+Immutable record of what was committed
+Multi-human, multi-agent collaboration
+Governance rules enforced at runtime
+Halt and resume when rules trigger
+Sealed artifacts on demand
+One workspace. Every surface. Same rails.</pre>
       </div>
     </div>
 

@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Platform — Project0</title>
-<meta name="description" content="The stack. Every surface runs on P0 rails. ProjectCore, ProjectLedger, P1, Spines.">
+<title>Platform - Project0</title>
+<meta name="description" content="The stack. Every surface runs on Project0 rails. ProjectCore, ProjectLedger, ProjectBuild, and Spines.">
+<link rel="canonical" href="https://project0.io/platform">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,6 +24,7 @@
   --gray-1: #e0e0e0;
   --gray-2: #808080;
   --gray-3: #404040;
+  --amber: #d4a853;
   --gray-4: #202020;
   --shadow-card: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
   --shadow-hover: 0 4px 12px rgba(0,0,0,0.7), 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.11);
@@ -45,7 +47,7 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 200;
-  height: 58px;
+  height: 110px;
   padding: 0 52px;
   display: flex;
   align-items: center;
@@ -56,30 +58,32 @@ nav {
   border-bottom: 1px solid var(--border);
 }
 .nav-logo {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  height: 90px;
 }
+.nav-logo img { height: 90px; width: auto; display: block; }
 .nav-right { display: flex; align-items: center; gap: 32px; }
 .nav-link { font-size: 13px; font-weight: 450; color: var(--gray-2); text-decoration: none; transition: color 0.15s; }
-.nav-link:hover, .nav-link.active { color: var(--white); }
+.nav-link:hover { color: var(--white); }
+.nav-link.active { color: var(--amber); }
+.nav-link-amber { color: var(--gray-2); }
+.nav-link-amber:hover { color: var(--white); }
+.nav-link-amber.active { color: var(--amber); }
 .nav-cta {
   font-size: 12px; font-weight: 600; color: var(--white); text-decoration: none;
   background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
   padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
 }
 .nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
-.inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
+.inner { max-width: 1080px; margin: 0 auto; padding: 108px 52px 72px; width: 100%; }
 .label {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
   letter-spacing: 0.22em; color: var(--gray-3); text-transform: uppercase;
   margin-bottom: 28px; display: block;
 }
 .platform-h { font-size: clamp(22px, 2.8vw, 38px); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 8px; line-height: 1.1; }
-.platform-sub { font-size: 15px; color: var(--gray-2); max-width: 440px; line-height: 1.7; margin-bottom: 36px; }
+.platform-sub { font-size: 15px; color: var(--gray-1); max-width: 440px; line-height: 1.7; margin-bottom: 36px; }
 .stack { display: flex; flex-direction: column; gap: 8px; }
 .stack-core {
   background: var(--white); border-radius: var(--radius); padding: 26px 28px;
@@ -108,7 +112,7 @@ nav {
 }
 .stack-row:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); transform: translateX(2px); }
 .stack-name { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); }
-.stack-desc { font-size: 13px; color: var(--gray-2); line-height: 1.6; padding: 0 28px; }
+.stack-desc { font-size: 13px; color: var(--gray-1); line-height: 1.6; padding: 0 28px; }
 .stack-desc strong { color: var(--white); font-weight: 600; }
 .stack-pill {
   font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
@@ -119,7 +123,7 @@ nav {
 .stack-pill.live { color: var(--white); background: rgba(255,255,255,0.07); border-color: var(--border-bright); }
 .ecosystem-bar {
   margin-top: 4px; padding: 16px 22px; background: var(--dark); border: 1px solid var(--border);
-  border-radius: var(--radius); font-size: 13px; color: var(--gray-2); line-height: 1.7; box-shadow: var(--shadow-card);
+  border-radius: var(--radius); font-size: 13px; color: var(--gray-1); line-height: 1.7; box-shadow: var(--shadow-card);
 }
 .ecosystem-bar strong { color: var(--white); font-weight: 600; }
 .arch-diagram {
@@ -160,8 +164,8 @@ nav {
 }
 .arch-surface-name { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); }
 .arch-surface-sub { font-size: 10px; color: var(--gray-3); margin-top: 3px; font-family: var(--mono); }
-.arch-surface.live { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
-.arch-surface.live .arch-surface-name { color: #4ade80; }
+.arch-surface.live { border-color: rgba(212,168,83,0.4); background: rgba(212,168,83,0.12); }
+.arch-surface.live .arch-surface-name { color: var(--amber); }
 footer {
   padding: 28px 52px;
   border-top: 1px solid var(--border); display: flex;
@@ -169,12 +173,15 @@ footer {
 }
 .footer-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); display: block; margin-bottom: 3px; }
 .footer-tag { font-size: 12px; color: var(--gray-3); font-style: italic; }
+.footer-tag .footer-tag-amber { color: var(--amber); font-style: italic; }
 .footer-links { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
 .footer-link { font-size: 12px; color: var(--gray-3); text-decoration: none; transition: color 0.15s; }
 .footer-link:hover { color: var(--white); }
 .footer-infra { font-size: 11px; color: var(--gray-4); }
 @media (max-width: 860px) {
   nav { padding: 0 20px; }
+  .nav-right { gap: 20px; }
+  .nav-link-extra { display: none; }
   .inner { padding: 80px 20px 60px; }
   .stack-core, .stack-row { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
   .core-desc, .stack-desc { padding: 0; }
@@ -183,7 +190,12 @@ footer {
   .arch-surface-col { flex: 1 1 45%; min-width: 120px; }
 }
 @media (max-width: 600px) {
-  nav { padding: 0 16px; }
+  nav { padding: 0 16px; height: 100px; }
+  .nav-logo { height: 70px; }
+  .nav-logo img { height: 70px; }
+  .nav-right { gap: 16px; }
+  .nav-link { font-size: 12px; }
+  .nav-cta { font-size: 11px; padding: 8px 12px; }
   .inner { padding: 72px 16px 48px; }
   .arch-connectors { flex-direction: column; }
   .arch-surface-col { flex: none; width: 100%; }
@@ -194,11 +206,12 @@ footer {
 <body>
 
 <nav>
-  <a href="/" class="nav-logo">Project0</a>
+  <a href="/" class="nav-logo" aria-label="Project0 home"><img src="/logo.svg" alt="Project0"></a>
   <div class="nav-right">
     <a href="/platform" class="nav-link active">Platform</a>
     <a href="/primitives" class="nav-link">Primitives</a>
     <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+    <a href="mailto:hello@project0.io" class="nav-link">Build with us</a>
   </div>
 </nav>
 
@@ -213,7 +226,7 @@ footer {
           <span class="core-badge">The Foundation</span>
           <div class="core-name">ProjectCore</div>
         </div>
-        <div class="core-desc"><strong>The engine. Everything runs on this.</strong> API-only control plane. Promote, Authority, Memory — all primitives live here. The entry point if you are building at the infrastructure layer.</div>
+        <div class="core-desc"><strong>The engine. Everything runs on this.</strong> API-only control plane. Promote, Authority, Memory - all primitives live here. The entry point if you are building at the infrastructure layer.</div>
         <span class="core-pill">In Development</span>
       </div>
       <div class="stack-row">
@@ -222,9 +235,9 @@ footer {
         <span class="stack-pill live"><a href="https://projectledger.io" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Live Now ↗</a></span>
       </div>
       <div class="stack-row">
-        <div class="stack-name">P1</div>
-        <div class="stack-desc"><strong>Multi-human, multi-agent.</strong> For teams that want Project0 governance without the API-only route. Accountability built in from day one.</div>
-        <span class="stack-pill">Next</span>
+        <div class="stack-name">ProjectBuild</div>
+        <div class="stack-desc"><strong>The team surface.</strong> The governed workspace for multi-human, multi-agent collaboration on the same rails that power ProjectLedger.</div>
+        <span class="stack-pill">Build With Us</span>
       </div>
       <div class="stack-row">
         <div class="stack-name">Spines</div>
@@ -253,8 +266,8 @@ footer {
           <div class="arch-surface-col">
             <div class="arch-vert-line"></div>
             <div class="arch-surface">
-              <div class="arch-surface-name">P1</div>
-              <div class="arch-surface-sub">team surface · next</div>
+              <div class="arch-surface-name">ProjectBuild</div>
+              <div class="arch-surface-sub">team surface · governed collaboration</div>
             </div>
           </div>
           <div class="arch-surface-col">
@@ -280,7 +293,7 @@ footer {
 <footer>
   <div>
     <span class="footer-logo">Project0</span>
-    <span class="footer-tag">From nothing, create something.</span>
+    <span class="footer-tag">From nothing, <span class="footer-tag-amber">create something.</span></span>
   </div>
   <div class="footer-links">
     <a href="https://projectledger.io" class="footer-link" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>

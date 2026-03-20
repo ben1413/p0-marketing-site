@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Primitives — Project0</title>
+<title>Primitives - Project0</title>
 <meta name="description" content="Three primitives. Promote, Authority, Memory. The physics of the system.">
+<link rel="canonical" href="https://project0.io/primitives">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,6 +24,7 @@
   --gray-1: #e0e0e0;
   --gray-2: #808080;
   --gray-3: #404040;
+  --amber: #d4a853;
   --gray-4: #202020;
   --shadow-card: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
   --shadow-hover: 0 4px 12px rgba(0,0,0,0.7), 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.11);
@@ -45,7 +47,7 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 200;
-  height: 58px;
+  height: 110px;
   padding: 0 52px;
   display: flex;
   align-items: center;
@@ -56,30 +58,32 @@ nav {
   border-bottom: 1px solid var(--border);
 }
 .nav-logo {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--white);
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  height: 90px;
 }
+.nav-logo img { height: 90px; width: auto; display: block; }
 .nav-right { display: flex; align-items: center; gap: 32px; }
 .nav-link { font-size: 13px; font-weight: 450; color: var(--gray-2); text-decoration: none; transition: color 0.15s; }
-.nav-link:hover, .nav-link.active { color: var(--white); }
+.nav-link:hover { color: var(--white); }
+.nav-link.active { color: var(--amber); }
+.nav-link-amber { color: var(--gray-2); }
+.nav-link-amber:hover { color: var(--white); }
+.nav-link-amber.active { color: var(--amber); }
 .nav-cta {
   font-size: 12px; font-weight: 600; color: var(--white); text-decoration: none;
   background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
   padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
 }
 .nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
-.inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
+.inner { max-width: 1080px; margin: 0 auto; padding: 108px 52px 72px; width: 100%; }
 .label {
   font-family: var(--mono); font-size: 10px; font-weight: 600;
   letter-spacing: 0.22em; color: var(--gray-3); text-transform: uppercase;
   margin-bottom: 28px; display: block;
 }
 .prim-h { font-size: clamp(22px, 2.8vw, 38px); font-weight: 800; letter-spacing: -0.025em; margin-bottom: 6px; line-height: 1.1; }
-.prim-sub { font-size: 14px; color: var(--gray-2); margin-bottom: 40px; }
+.prim-sub { font-size: 14px; color: var(--amber); margin-bottom: 40px; }
 
 .prim-grid { display: flex; flex-direction: column; gap: 8px; }
 .prim-row {
@@ -95,13 +99,13 @@ nav {
 .prim-name { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); }
 .prim-body { padding: 28px 32px; }
 .prim-one { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 8px; line-height: 1.45; }
-.prim-detail { font-size: 13px; color: var(--gray-2); line-height: 1.8; margin-bottom: 10px; }
+.prim-detail { font-size: 13px; color: var(--gray-1); line-height: 1.8; margin-bottom: 10px; }
 .prim-detail:last-of-type { margin-bottom: 0; }
 .prim-detail strong { color: var(--white); font-weight: 600; }
 .prim-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
 .prim-tag {
   font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.08em;
-  color: var(--gray-2); border: 1px solid var(--border-med); border-radius: var(--radius-pill);
+  color: var(--gray-1); border: 1px solid var(--border-med); border-radius: var(--radius-pill);
   padding: 4px 11px; background: var(--near-black); box-shadow: var(--shadow-card);
 }
 
@@ -112,6 +116,7 @@ footer {
 }
 .footer-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white); display: block; margin-bottom: 3px; }
 .footer-tag { font-size: 12px; color: var(--gray-3); font-style: italic; }
+.footer-tag .footer-tag-amber { color: var(--amber); font-style: italic; }
 .footer-links { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
 .footer-link { font-size: 12px; color: var(--gray-3); text-decoration: none; transition: color 0.15s; }
 .footer-link:hover { color: var(--white); }
@@ -119,6 +124,8 @@ footer {
 
 @media (max-width: 860px) {
   nav { padding: 0 20px; }
+  .nav-right { gap: 20px; }
+  .nav-link-extra { display: none; }
   .inner { padding: 80px 20px 60px; }
   .prim-row { grid-template-columns: 1fr; }
   .prim-name-col { border-right: none; border-bottom: 1px solid var(--border); padding: 18px 20px; }
@@ -127,7 +134,12 @@ footer {
 }
 
 @media (max-width: 600px) {
-  nav { padding: 0 16px; height: 52px; }
+  nav { padding: 0 16px; height: 100px; }
+  .nav-logo { height: 70px; }
+  .nav-logo img { height: 70px; }
+  .nav-right { gap: 16px; }
+  .nav-link { font-size: 12px; }
+  .nav-cta { font-size: 11px; padding: 8px 12px; }
   .inner { padding: 72px 16px 48px; }
   .prim-h { font-size: clamp(20px, 5.5vw, 32px); }
   footer { padding: 20px 16px; gap: 12px; }
@@ -138,11 +150,12 @@ footer {
 <body>
 
 <nav>
-  <a href="/" class="nav-logo">Project0</a>
+  <a href="/" class="nav-logo" aria-label="Project0 home"><img src="/logo.svg" alt="Project0"></a>
   <div class="nav-right">
     <a href="/platform" class="nav-link">Platform</a>
     <a href="/primitives" class="nav-link active">Primitives</a>
     <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+    <a href="mailto:hello@project0.io" class="nav-link">Build with us</a>
   </div>
 </nav>
 
@@ -181,7 +194,7 @@ footer {
         <div class="prim-name-col"><span class="prim-name">MEMORY</span></div>
         <div class="prim-body">
           <p class="prim-one">Immutable record of what actually happened.</p>
-          <p class="prim-detail"><strong>Ledger</strong> — immutable. Append-only. Cannot be edited. Cannot be erased. <strong>Brain</strong> — mutable. Operational. Supersession is allowed. Silent edits are not.</p>
+          <p class="prim-detail"><strong>Ledger</strong> - immutable. Append-only. Cannot be edited. Cannot be erased. <strong>Brain</strong> - mutable. Operational. Supersession is allowed. Silent edits are not.</p>
           <p class="prim-detail"><strong>Promote is the boundary.</strong> Core memory is durable and accountable. Working memory is useful and disposable.</p>
         </div>
       </div>
@@ -192,7 +205,7 @@ footer {
 <footer>
   <div>
     <span class="footer-logo">Project0</span>
-    <span class="footer-tag">From nothing, create something.</span>
+    <span class="footer-tag">From nothing, <span class="footer-tag-amber">create something.</span></span>
   </div>
   <div class="footer-links">
     <a href="https://projectledger.io" class="footer-link" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>

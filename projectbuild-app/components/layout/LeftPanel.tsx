@@ -11,6 +11,7 @@ interface LeftPanelProps {
 export function LeftPanel({ activeProjectId }: LeftPanelProps) {
   const { projects, loading } = useProjects();
   const pathname = usePathname();
+  const showAgentDirectory = process.env.NEXT_PUBLIC_SHOW_AGENT_DIRECTORY === "1";
 
   return (
     <aside className="w-72 border-r border-white/10 flex flex-col h-full bg-transparent">
@@ -71,15 +72,27 @@ export function LeftPanel({ activeProjectId }: LeftPanelProps) {
         >
           Workspace
         </Link>
+        {showAgentDirectory && (
+          <Link
+            href="/agents"
+            className={`flex items-center gap-3 w-full px-6 py-2.5 rounded-full text-[12px] font-medium transition-all duration-200 ${
+              pathname?.startsWith("/agents")
+                ? "bg-white/10 text-[var(--text-blue)]"
+                : "text-[var(--muted)] hover:text-[var(--text-blue)] hover:bg-white/5"
+            }`}
+          >
+            Agent Directory
+          </Link>
+        )}
         <Link
-          href="/agents"
+          href="/conclave"
           className={`flex items-center gap-3 w-full px-6 py-2.5 rounded-full text-[12px] font-medium transition-all duration-200 ${
-            pathname?.startsWith("/agents")
+            pathname === "/conclave" || pathname?.startsWith("/conclave/")
               ? "bg-white/10 text-[var(--text-blue)]"
               : "text-[var(--muted)] hover:text-[var(--text-blue)] hover:bg-white/5"
           }`}
         >
-          Agent Directory
+          Conclave (live ops)
         </Link>
       </div>
     </aside>

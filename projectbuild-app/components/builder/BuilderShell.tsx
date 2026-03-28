@@ -9,6 +9,7 @@ import { BuilderAgentBar } from "./BuilderAgentBar";
 import { BuilderPromoteModal } from "./BuilderPromoteModal";
 import { useCognitivePreload } from "@/lib/builder/useCognitivePreload";
 import { useBuilderStream } from "@/lib/builder/useBuilderStream";
+import { useStableUserId } from "@/lib/user/useStableUserId";
 import type { ThreadMessage } from "@/types";
 
 const FILETREE_WIDTH_KEY = "pb_builder_filetree_width";
@@ -39,6 +40,7 @@ interface BuilderShellProps {
 export function BuilderShell({ projectId, runId, onClose }: BuilderShellProps) {
   const [activeFilePath, setActiveFilePath] = useState<string | null>(null);
   const [promoteTarget, setPromoteTarget] = useState<ThreadMessage | null>(null);
+  const userId = useStableUserId();
 
   // Cognitive preload — fires once on open, branch + root fetched from Companion
   const { ready: contextReady, loading: contextLoading, buildPreamble } = useCognitivePreload(projectId);
@@ -169,7 +171,7 @@ export function BuilderShell({ projectId, runId, onClose }: BuilderShellProps) {
         <BuilderPromoteModal
           message={promoteTarget}
           projectId={projectId}
-          userId="local"
+          userId={userId || "local"}
           activeFilePath={activeFilePath}
           onClose={() => setPromoteTarget(null)}
           onQueued={(_artifactId, _scope) => setPromoteTarget(null)}

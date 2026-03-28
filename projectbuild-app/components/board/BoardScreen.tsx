@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useBoard } from "@/lib/board/useBoard";
+import { useStableUserId } from "@/lib/user/useStableUserId";
 import { ProjectSurfaceShell } from "@/components/layout/ProjectSurfaceShell";
 import { BuilderButtonAndShell } from "@/components/builder/BuilderButtonAndShell";
 import { DesignerButtonAndShell } from "@/components/designer/DesignerButtonAndShell";
@@ -159,6 +160,7 @@ interface BoardScreenProps {
 
 export function BoardScreen({ projectId }: BoardScreenProps) {
   const { items, moveItem, addItem, applyBoardActions } = useBoard(projectId);
+  const userId = useStableUserId();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newItemCol, setNewItemCol] = useState<BoardColumnId | null>(null);
   const [dragItemId, setDragItemId] = useState<string | null>(null);
@@ -259,7 +261,7 @@ export function BoardScreen({ projectId }: BoardScreenProps) {
             summary: promoteName.trim() || meetingName,
             type: "decision",
             authorityMode: "human_led",
-            actor: "user",
+            actor: { type: "human", id: userId || "unknown" },
             projectId,
             runId: coreMeetingId ?? undefined,
           }),
@@ -274,7 +276,7 @@ export function BoardScreen({ projectId }: BoardScreenProps) {
     setCoreMeetingId(null);
     setMeetingName("");
     setShowEndModal(false);
-  }, [coreMeetingId, promoteName, meetingName, projectId]);
+  }, [coreMeetingId, promoteName, meetingName, projectId, userId]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();

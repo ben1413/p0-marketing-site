@@ -10,6 +10,7 @@ import { DesignerPromoteModal } from "./DesignerPromoteModal";
 import { FigmaImportModal } from "./FigmaImportModal";
 import { useDesignerCognitivePreload } from "@/lib/designer/useDesignerCognitivePreload";
 import { useDesignerStream } from "@/lib/designer/useDesignerStream";
+import { useStableUserId } from "@/lib/user/useStableUserId";
 import type { CanvasElement, DesignerMode, DesignerTool, ThreadMessage } from "@/types";
 
 interface DesignerShellProps {
@@ -29,6 +30,7 @@ export function DesignerShell({ projectId, projectName, runId, onClose }: Design
   const [promoteTarget, setPromoteTarget] = useState<ThreadMessage | null>(null);
   const [showFigmaImport, setShowFigmaImport] = useState(false);
   const [canvasSnapshot, setCanvasSnapshot] = useState<string | null>(null);
+  const userId = useStableUserId();
 
   // Canvas ref — used to capture toDataURL for promote artifact
   const canvasRef = useRef<{ toDataURL: () => string } | null>(null);
@@ -237,7 +239,7 @@ export function DesignerShell({ projectId, projectName, runId, onClose }: Design
       {promoteTarget && (
         <DesignerPromoteModal
           projectId={projectId}
-          userId="local"
+          userId={userId || "local"}
           canvasElements={canvasElements}
           canvasSnapshot={canvasSnapshot}
           runId={runId}

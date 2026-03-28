@@ -75,7 +75,9 @@ export async function POST(req: NextRequest) {
         authorityMode: authority === "hitl" ? "human_in_the_loop"
           : authority === "agent-autonomous" ? "agent_autonomous"
           : "human_led",
-        actor: preparedByAgent ? (agent ?? "agent") : userId,
+        actor: preparedByAgent
+          ? { type: "agent" as const, id: agent ?? "agent" }
+          : { type: "human" as const, id: userId },
         type: "code",
         tags: [branch, ...filePaths.slice(0, 3)],
         projectId,

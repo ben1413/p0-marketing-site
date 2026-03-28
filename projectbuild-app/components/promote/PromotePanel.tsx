@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useStableUserId } from "@/lib/user/useStableUserId";
 import type { ThreadMessage, AuthorityMode, LedgerItemType, TruthPosture } from "@/types";
 
 interface PromotePanelProps {
@@ -20,6 +21,7 @@ export function PromotePanel({ message, projectId, runId, onClose, onSealed }: P
   const [tags, setTags] = useState("");
   const [promoting, setPromoting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const userId = useStableUserId();
 
   const truthPosture: TruthPosture | undefined = message.truthPosture;
   // unknown posture disables agent_autonomous — both here and enforced server-side
@@ -46,7 +48,7 @@ export function PromotePanel({ message, projectId, runId, onClose, onSealed }: P
         body: JSON.stringify({
           summary: summary.trim(),
           authorityMode,
-          actor: "user",
+          actor: { type: "human", id: userId || "unknown" },
           type,
           tags: tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : [],
           projectId,

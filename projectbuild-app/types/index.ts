@@ -158,7 +158,7 @@ export type PromotePayload = {
   evaluationId: string;
   summary: string;
   authorityMode: AuthorityMode;
-  actor: string;
+  actor: string | { type: string; id: string };
   type?: LedgerItemType;
   tags?: string[];
   projectId?: string;

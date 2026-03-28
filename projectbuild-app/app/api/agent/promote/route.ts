@@ -9,7 +9,11 @@ export async function POST(req: NextRequest) {
     if (!body.summary?.trim()) {
       return NextResponse.json({ ok: false, error: "summary is required" }, { status: 400 });
     }
-    if (!body.actor?.trim()) {
+    const actorRaw = body.actor;
+    const actorValid =
+      (typeof actorRaw === "string" && actorRaw.trim().length > 0) ||
+      (typeof actorRaw === "object" && actorRaw !== null && typeof (actorRaw as { id?: string }).id === "string");
+    if (!actorValid) {
       return NextResponse.json({ ok: false, error: "actor is required" }, { status: 400 });
     }
 

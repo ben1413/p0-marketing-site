@@ -29,8 +29,10 @@ function getOrCreateRunId(projectId: string): string {
 }
 
 export function ProjectRoom({ projectId }: ProjectRoomProps) {
+  const showTracks = process.env.NEXT_PUBLIC_SHOW_TRACK_ROUTES === "1";
   const tracks = useTracks(projectId);
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [agentsLoaded, setAgentsLoaded] = useState(false);
   const [selectedAgentId, setSelectedAgentId] = useState("");
   const [selectedModel, setSelectedModel] = useState("gpt-4o");
   const [isRunning, setIsRunning] = useState(false);
@@ -46,6 +48,7 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
 
   // Load agents from Core via our API proxy
   useEffect(() => {
+    setAgentsLoaded(false);
     fetch(`/api/agents/list?projectId=${projectId}`)
       .then((r) => r.json())
       .then((d: { items?: Agent[] }) => {
@@ -53,19 +56,20 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
         setAgents(items);
         if (items.length > 0) setSelectedAgentId(items[0].id);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setAgentsLoaded(true));
   }, [projectId]);
 
-  // Seed a first-run welcome message when project initialization preload exists.
+  // Seed welcome message after agents load — uses /agents/{id}/self for contextual opening.
   useEffect(() => {
-    if (!runId || seededWelcomeRef.current) return;
+    if (!runId || !agentsLoaded || seededWelcomeRef.current) return;
     seededWelcomeRef.current = true;
 
     void (async () => {
       const projectRef = doc(db, "pb_projects", projectId);
       const projectSnap = await getDoc(projectRef);
       const projectData = projectSnap.data() as
-        | { initialization?: { cognitivePreload?: unknown; welcomeSeededAt?: unknown } }
+        | { initialization?: { cognitivePreload?: unknown; welcomeSeededAt?: unknown }; name?: string }
         | undefined;
       const initialization = projectData?.initialization;
 
@@ -87,13 +91,51 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
         return;
       }
 
+      const leadAgent = agents[0];
+      const agentName = leadAgent?.jobTitle ?? "Systems Architect";
+
+      let welcomeText = "I've reviewed the project brief and the starter spine. Ready when you are.";
+
+      if (leadAgent) {
+        try {
+          const selfRes = await fetch(`/api/agents/${leadAgent.id}/self`);
+          if (selfRes.ok) {
+            const selfData = (await selfRes.json()) as {
+              self?: {
+                recent_gov_decisions?: { action?: string; outcome?: string; reason?: string }[];
+                roster?: { name?: string; job_title?: string }[];
+              };
+            };
+            const govDecisions = selfData?.self?.recent_gov_decisions;
+            const roster = selfData?.self?.roster;
+
+            if (govDecisions && govDecisions.length > 0) {
+              const latest = govDecisions[0];
+              const govLine = [latest.outcome, latest.action, latest.reason].filter(Boolean).join(" — ");
+              const rosterNames = roster && roster.length > 0
+                ? roster.map((r) => r.job_title ?? r.name).join(", ")
+                : null;
+              welcomeText = rosterNames
+                ? `Back in ${projectData?.name ?? "the project"}. Last governance thread: ${govLine}. ${rosterNames} ${roster!.length === 1 ? "is" : "are"} on the roster. Want to extend that thread or tackle something new?`
+                : `Back in ${projectData?.name ?? "the project"}. Last governance thread: ${govLine}. Want to pick that up or go a different direction?`;
+            } else if (roster && roster.length > 0) {
+              const rosterNames = roster.map((r) => r.job_title ?? r.name).join(", ");
+              welcomeText = `I've reviewed the project brief. ${rosterNames} ${roster.length === 1 ? "is" : "are"} on the roster with me. What are we tackling first?`;
+            }
+          }
+        } catch {
+          // Non-fatal: fall through to static welcome
+        }
+      }
+
       await addDoc(collection(db, "pb_messages"), {
         projectId,
         runId,
-        text: "I've reviewed the project brief and the starter spine. Ready when you are.",
+        text: welcomeText,
         authorType: "agent",
-        authorName: "Systems Architect",
-        agentJobTitle: "Systems Architect",
+        authorName: agentName,
+        agentJobTitle: agentName,
+        agentId: leadAgent?.id,
         createdAt: serverTimestamp(),
       });
 
@@ -101,7 +143,7 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
     })().catch((err) => {
       console.error("[Room] failed to seed welcome message:", err);
     });
-  }, [projectId, runId]);
+  }, [projectId, runId, agentsLoaded, agents]);
 
   const handleSend = async (text: string) => {
     if (!runId) return;
@@ -206,12 +248,14 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
           >
             PM Board
           </Link>
-          <Link
-            href={`/projects/${projectId}/tracks/new`}
-            className="bg-white text-black px-6 py-2 rounded-full font-bold text-[10px] tracking-widest uppercase soft-elevate"
-          >
-            New Track
-          </Link>
+          {showTracks && (
+            <Link
+              href={`/projects/${projectId}/tracks/new`}
+              className="bg-white text-black px-6 py-2 rounded-full font-bold text-[10px] tracking-widest uppercase soft-elevate"
+            >
+              New Track
+            </Link>
+          )}
         </>
       }
       center={
@@ -269,34 +313,36 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
       }
       right={
         <div className="flex flex-col h-full">
-          <div className="px-5 pt-5 pb-3 border-b border-white/10">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-bold tracking-[0.35em] uppercase text-[var(--text-blue)]/60">
-                Tracks
-              </span>
-              <Link
-                href={`/projects/${projectId}/tracks/new`}
-                className="text-[9px] font-bold tracking-widest uppercase text-[var(--muted)] hover:text-[var(--text-blue)] transition-colors"
-              >
-                + New
-              </Link>
+          {showTracks && (
+            <div className="px-5 pt-5 pb-3 border-b border-white/10">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[10px] font-bold tracking-[0.35em] uppercase text-[var(--text-blue)]/60">
+                  Tracks
+                </span>
+                <Link
+                  href={`/projects/${projectId}/tracks/new`}
+                  className="text-[9px] font-bold tracking-widest uppercase text-[var(--muted)] hover:text-[var(--text-blue)] transition-colors"
+                >
+                  + New
+                </Link>
+              </div>
+              <div className="space-y-1">
+                {tracks.length === 0 ? (
+                  <p className="text-[11px] text-[var(--muted)]/60">No tracks yet.</p>
+                ) : (
+                  tracks.map((t) => (
+                    <Link
+                      key={t.id}
+                      href={`/projects/${projectId}/tracks/${t.id}`}
+                      className="block px-3 py-2 rounded-lg text-[12px] text-[var(--text-blue)] hover:bg-white/5 transition-colors truncate"
+                    >
+                      {t.name}
+                    </Link>
+                  ))
+                )}
+              </div>
             </div>
-            <div className="space-y-1">
-              {tracks.length === 0 ? (
-                <p className="text-[11px] text-[var(--muted)]/60">No tracks yet.</p>
-              ) : (
-                tracks.map((t) => (
-                  <Link
-                    key={t.id}
-                    href={`/projects/${projectId}/tracks/${t.id}`}
-                    className="block px-3 py-2 rounded-lg text-[12px] text-[var(--text-blue)] hover:bg-white/5 transition-colors truncate"
-                  >
-                    {t.name}
-                  </Link>
-                ))
-              )}
-            </div>
-          </div>
+          )}
 
           <div className="px-5 py-4 border-b border-white/10">
             <span className="text-[10px] font-bold tracking-[0.35em] uppercase text-[var(--text-blue)]/60 block mb-2">

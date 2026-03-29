@@ -1,0 +1,15 @@
+{
+  "name": "project0-marketing",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m http.server 4000",
+    "start": "python3 -m http.server 4000",
+    "lint": "html-validate **/*.html",
+    "check-links": "hyperlink --internal .",
+    "build": "echo 'Static site — no build step'"
+  },
+  "devDependencies": {
+    "html-validate": "^10.11.2",
+    "hyperlink": "^5.0.4"
+  }
+}

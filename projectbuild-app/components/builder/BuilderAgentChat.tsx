@@ -17,6 +17,7 @@ import { useMessages } from "@/lib/hooks/useMessages";
 import { BuilderBubble } from "./BuilderBubble";
 import type { ThreadMessage } from "@/types";
 import type { StreamingMessage } from "@/lib/builder/useBuilderStream";
+import { CircuitBreakBanner } from "@/components/circuit/CircuitBreakBanner";
 
 interface BuilderAgentChatProps {
   projectId: string;
@@ -84,13 +85,21 @@ export function BuilderAgentChat({
       ))}
 
       {/* In-progress streaming bubble — sits at bottom during active stream */}
-      {streamingMsg && (
+      {streamingMsg && !streamingMsg.circuitBreak && (
         <BuilderBubble
           key="__streaming__"
           message={makeStreamingMessage(streamingMsg)}
           onPromote={() => {}}
           promoted={false}
           isStreaming
+        />
+      )}
+
+      {/* Circuit break banner — when stream is terminated by circuit breaker */}
+      {streamingMsg?.circuitBreak && (
+        <CircuitBreakBanner
+          code={streamingMsg.circuitBreak.code}
+          reason={streamingMsg.circuitBreak.reason}
         />
       )}
 

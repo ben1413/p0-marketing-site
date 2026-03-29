@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ProjectBuild - Project0</title>
+<meta name="description" content="ProjectBuild is the governed team workspace for multi-human, multi-agent collaboration on ProjectCore rails without API integration.">
+<link rel="canonical" href="https://project0.io/projectbuild">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #050505;
+  --near-black: #0a0a0a;
+  --dark: #0f0f0f;
+  --card: #131313;
+  --card-2: #181818;
+  --border: rgba(255,255,255,0.055);
+  --border-med: rgba(255,255,255,0.1);
+  --white: #ffffff;
+  --gray-1: #e0e0e0;
+  --gray-2: #808080;
+  --gray-3: #404040;
+  --muted: #a8a8a8;
+  --amber: #d4a853;
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.6), 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.7), 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.11);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+}
+body { background: var(--near-black); color: var(--white); font-family: var(--font); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 110px; padding: 0 52px; display: flex; align-items: center; justify-content: space-between;
+  background: rgba(5,5,5,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--border);
+}
+.nav-logo { display: inline-flex; align-items: center; height: 90px; }
+.nav-logo img { height: 90px; width: auto; display: block; }
+.nav-right { display: flex; align-items: center; gap: 32px; }
+.nav-link { font-size: 13px; font-weight: 450; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+.nav-link:hover { color: var(--white); }
+.nav-link.active { color: var(--amber); }
+.nav-link-amber { color: var(--muted); }
+.nav-link-amber:hover { color: var(--white); }
+.nav-link-amber.active { color: var(--amber); }
+.nav-cta {
+  font-size: 12px; font-weight: 600; color: var(--white); text-decoration: none;
+  background: var(--card-2); border: 1px solid var(--border-med); border-radius: var(--radius-sm);
+  padding: 7px 14px; letter-spacing: 0.03em; box-shadow: var(--shadow-card); transition: all 0.15s;
+}
+.nav-cta:hover { background: var(--white); color: var(--black); border-color: transparent; }
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 0; border: none; background: transparent; color: var(--white); cursor: pointer; z-index: 202; border-radius: var(--radius-sm); }
+.nav-toggle:hover { background: var(--card-2); }
+.nav-toggle span { display: block; width: 20px; height: 2px; background: currentColor; border-radius: 1px; transition: transform 0.25s, opacity 0.25s; }
+nav.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+nav.nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
+nav.nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+@media (max-width: 768px) {
+  .nav-toggle { display: flex; }
+  .nav-backdrop { display: block; }
+  .nav-right { position: fixed; top: 0; right: 0; width: min(280px, 85vw); height: 100vh; background: var(--near-black); flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 100px 24px 24px; gap: 0; box-shadow: -4px 0 24px rgba(0,0,0,0.5); transform: translateX(100%); transition: transform 0.25s ease; z-index: 201; border-left: 1px solid var(--border); }
+  .nav-right .nav-link, .nav-right .nav-cta { display: block; padding: 14px 0; border-bottom: 1px solid var(--border); border-radius: 0; }
+  .nav-right .nav-cta { background: transparent; box-shadow: none; }
+  nav.nav-open .nav-right { transform: translateX(0); }
+  nav.nav-open .nav-backdrop { opacity: 1; pointer-events: auto; }
+  body.nav-open { overflow: hidden; }
+}
+
+.inner { max-width: 1080px; margin: 0 auto; padding: 88px 52px 72px; width: 100%; }
+
+.pb-hero { padding-top: 20px; }
+.pb-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 28px; display: block;
+}
+.pb-h { font-size: clamp(36px, 4.8vw, 56px); font-weight: 800; letter-spacing: -0.032em; line-height: 1.06; margin-bottom: 18px; }
+.pb-sub { font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 22px; line-height: 1.45; max-width: 700px; }
+.pb-body { font-size: 16px; color: var(--gray-1); line-height: 1.8; max-width: 680px; margin-bottom: 20px; }
+.pb-body + .pb-body { margin-bottom: 32px; }
+.pb-cta {
+  display: inline-flex; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--amber); text-decoration: none; border: 1px solid rgba(212,168,83,0.4); border-radius: var(--radius-sm);
+  padding: 14px 24px; transition: all 0.15s;
+}
+.pb-cta:hover { background: rgba(212,168,83,0.12); border-color: var(--amber); }
+
+.pb-section-label {
+  font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 32px; margin-top: 88px; display: block;
+}
+
+.pb-problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pb-problem-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 24px; box-shadow: var(--shadow-card); transition: all 0.2s; }
+.pb-problem-card:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); }
+.pb-problem-label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); margin-bottom: 12px; line-height: 1.4; }
+.pb-problem-body { font-size: 13px; color: var(--gray-1); line-height: 1.75; }
+
+.pb-what-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); border: 1px solid var(--border);
+}
+.pb-what-col { padding: 34px 30px; }
+.pb-what-col.left { background: var(--card); }
+.pb-what-col.right { background: var(--card-2); border-left: 1px solid var(--border); }
+.pb-what-p { font-size: 14px; color: var(--gray-1); line-height: 1.78; margin-bottom: 14px; }
+.pb-what-p:last-child { margin-bottom: 0; }
+.pb-cap-pre {
+  font-family: var(--mono); font-size: 12px; color: var(--gray-1); line-height: 1.8;
+  white-space: pre-wrap; margin: 0;
+}
+
+.pb-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.pb-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 24px; box-shadow: var(--shadow-card); transition: all 0.2s; }
+.pb-card:hover { border-color: var(--border-med); box-shadow: var(--shadow-hover); }
+.pb-card-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; line-height: 1.4; }
+.pb-card-p { font-size: 13px; color: var(--gray-1); line-height: 1.75; }
+
+.pb-entry-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-card); }
+.pb-entry-card { background: var(--card); padding: 34px 30px; }
+.pb-entry-card + .pb-entry-card { border-left: 1px solid var(--border); background: var(--card-2); }
+.pb-entry-title { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--white); margin-bottom: 14px; }
+.pb-entry-body { font-size: 14px; color: var(--gray-1); line-height: 1.75; margin-bottom: 20px; max-width: 430px; }
+.pb-entry-link { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); text-decoration: none; }
+.pb-entry-link:hover { opacity: 0.85; }
+
+.pb-close { margin-top: 88px; padding: 72px 40px; text-align: center; background: var(--black); border: 1px solid var(--border); border-radius: var(--radius); }
+.pb-close-quote { font-size: clamp(30px, 4.5vw, 58px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; max-width: 900px; margin: 0 auto 16px; }
+.pb-close-note { font-size: 14px; color: var(--gray-1); line-height: 1.8; max-width: 540px; margin: 0 auto 26px; }
+
+footer { padding: 28px 52px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--black); }
+.footer-logo { display: block; margin-bottom: 6px; }
+.footer-logo img { height: 32px; width: auto; display: block; }
+.footer-tag { font-size: 12px; color: var(--muted); font-style: italic; }
+.footer-tag .footer-tag-amber { color: var(--amber); font-style: italic; }
+.footer-links { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.footer-link { font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+.footer-link:hover { color: var(--white); }
+
+@media (max-width: 860px) {
+  nav { padding: 0 20px; }
+  .inner { padding: 80px 20px 60px; }
+  .pb-problem-grid { grid-template-columns: 1fr; }
+  .pb-what-grid { grid-template-columns: 1fr; }
+  .pb-what-col.right { border-left: none; border-top: 1px solid var(--border); }
+  .pb-cards { grid-template-columns: 1fr; }
+  .pb-entry-grid { grid-template-columns: 1fr; }
+  .pb-entry-card + .pb-entry-card { border-left: none; border-top: 1px solid var(--border); }
+  footer { flex-direction: column; gap: 16px; align-items: flex-start; padding: 24px 20px; }
+}
+@media (max-width: 600px) {
+  nav { padding: 0 16px; height: 100px; }
+  .nav-logo, .nav-logo img { height: 70px; }
+  .inner { padding: 72px 16px 48px; }
+  .pb-close { padding: 44px 20px; }
+  footer { padding: 20px 16px; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a href="/" class="nav-logo" aria-label="Project0 home"><img src="/logo.svg" alt="Project0"></a>
+  <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div class="nav-backdrop" aria-hidden="true"></div>
+  <div class="nav-right">
+    <a href="/platform" class="nav-link active">Platform</a>
+    <a href="/primitives" class="nav-link">Primitives</a>
+    <a href="https://projectledger.io" class="nav-cta" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+    <a href="mailto:hello@project0.io?subject=ProjectBuild" class="nav-link">hello@project0.io</a>
+  </div>
+</nav>
+
+<main>
+  <div class="inner">
+    <section class="pb-hero">
+      <span class="pb-label">THE TEAM SURFACE</span>
+      <h1 class="pb-h">ProjectBuild</h1>
+      <p class="pb-sub">Multi-human, multi-agent collaboration.<br>Shared governance. Shared memory.<br>Every decision recorded.</p>
+      <p class="pb-body">You already know what it feels like when AI doesn't work in production. Context lost between sessions. No record of what was decided. Agents that can't be trusted past the demo. Wrappers that collapse under real operational load.</p>
+      <p class="pb-body">ProjectBuild is the workspace for teams that need AI to work like a system - not an experiment. Built on ProjectCore rails. No API integration required.</p>
+      <a href="mailto:hello@project0.io?subject=ProjectBuild" class="pb-cta">IF THIS IS YOUR PROBLEM - LET'S TALK →</a>
+    </section>
+
+    <span class="pb-section-label">WHY TEAMS GET BURNED</span>
+    <div class="pb-problem-grid">
+      <div class="pb-problem-card">
+        <p class="pb-problem-label">CONTEXT COLLAPSE</p>
+        <p class="pb-problem-body">Every new session starts from zero. Agents don't know what was decided last week. Teams spend more time re-explaining than building.</p>
+      </div>
+      <div class="pb-problem-card">
+        <p class="pb-problem-label">NO RECORD OF WHAT HAPPENED</p>
+        <p class="pb-problem-body">When something breaks, nobody can explain what the AI decided or why. There is no audit trail. There is no record. There is only the output.</p>
+      </div>
+      <div class="pb-problem-card">
+        <p class="pb-problem-label">WRAPPERS THAT DON'T SCALE</p>
+        <p class="pb-problem-body">LLM wrappers feel powerful in demos. They fail quietly, expensively, and repeatedly under real operational load. No governance. No memory. No rails.</p>
+      </div>
+    </div>
+
+    <span class="pb-section-label">WHAT IT IS</span>
+    <div class="pb-what-grid">
+      <div class="pb-what-col left">
+        <p class="pb-what-p">ProjectBuild is the governed workspace for human and agent teams.</p>
+        <p class="pb-what-p">Not another AI tool. Not a wrapper. A workspace where decisions are recorded, context persists, authority is declared, and every agent knows what every human decided - because it was promoted.</p>
+        <p class="pb-what-p">Built on ProjectCore. Every team gets the same rails that power ProjectLedger. No integration required.</p>
+      </div>
+      <div class="pb-what-col right">
+        <pre class="pb-cap-pre">Persistent agent memory across sessions
+Authority declared at every decision
+Immutable record of what was committed
+Multi-human, multi-agent collaboration
+Governance rules enforced at runtime
+Halt and resume when rules trigger
+Sealed artifacts on demand
+One workspace. Every surface. Same rails.</pre>
+      </div>
+    </div>
+
+    <span class="pb-section-label">WHO IT IS FOR</span>
+    <div class="pb-cards">
+      <div class="pb-card">
+        <p class="pb-card-label">CTOS</p>
+        <p class="pb-card-p">Who need their team working with AI in a uniform, accountable way - not 10 different tools with 10 different outputs and no shared record.</p>
+      </div>
+      <div class="pb-card">
+        <p class="pb-card-label">PRODUCT MANAGERS</p>
+        <p class="pb-card-p">Who need to know what was decided, who authorized it, and when - without chasing down Slack threads and hoping someone took notes.</p>
+      </div>
+      <div class="pb-card">
+        <p class="pb-card-label">BUILDERS AND OPERATORS</p>
+        <p class="pb-card-p">Who are done rebuilding context every session and need agents that carry forward what actually matters.</p>
+      </div>
+      <div class="pb-card">
+        <p class="pb-card-label">ENTERPRISE AND MID-SIZE TEAMS</p>
+        <p class="pb-card-p">Who want ProjectCore's governance without the API integration lift. Same rails. UI included.</p>
+      </div>
+    </div>
+
+    <span class="pb-section-label">BUILT ON PROJECTCORE</span>
+    <div class="pb-entry-grid">
+      <div class="pb-entry-card">
+        <p class="pb-entry-title">PROJECTCORE</p>
+        <p class="pb-entry-body">API-only control plane. Full control. You architect the surface. For teams building from the infrastructure layer up.</p>
+        <a href="/projectcore" class="pb-entry-link">VIEW PROJECTCORE →</a>
+      </div>
+      <div class="pb-entry-card">
+        <p class="pb-entry-title">PROJECTBUILD</p>
+        <p class="pb-entry-body">The governed UI surface of ProjectCore. Same runtime. Same governance. Same ledger. No API route required. This is where your team works.</p>
+      </div>
+    </div>
+
+    <section class="pb-close">
+      <h2 class="pb-close-quote">"Your team deserves a workspace<br>where AI decisions are recorded,<br>context persists, and nothing<br>important gets forgotten."</h2>
+      <p class="pb-close-note">ProjectBuild is available through direct engagement.<br>If your team has the problem - talk to us.</p>
+      <a href="mailto:hello@project0.io?subject=ProjectBuild" class="pb-cta">IF THIS IS YOUR PROBLEM - LET'S TALK →</a>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div>
+    <a href="/" class="footer-logo" aria-label="Project0 home"><img src="/logo.svg" alt="Project0"></a>
+    <span class="footer-tag">From nothing, <span class="footer-tag-amber">create something.</span></span>
+  </div>
+  <div class="footer-links">
+    <a href="/platform" class="footer-link">Platform</a>
+    <a href="/primitives" class="footer-link">Primitives</a>
+    <a href="/projectcore" class="footer-link">ProjectCore</a>
+    <a href="/projectbuild" class="footer-link">ProjectBuild</a>
+    <a href="https://projectledger.io" class="footer-link" target="_blank" rel="noopener noreferrer">ProjectLedger ↗</a>
+    <a href="mailto:hello@project0.io" class="footer-link">hello@project0.io</a>
+  </div>
+</footer>
+<script>
+(function(){
+  var nav=document.getElementById('main-nav');
+  if(!nav)return;
+  var btn=nav.querySelector('.nav-toggle'), back=nav.querySelector('.nav-backdrop'), links=nav.querySelectorAll('.nav-right a');
+  function close(){ nav.classList.remove('nav-open'); document.body.classList.remove('nav-open'); if(btn)btn.setAttribute('aria-expanded','false'); }
+  if(btn)btn.addEventListener('click',function(){ nav.classList.contains('nav-open')?close():(nav.classList.add('nav-open'),document.body.classList.add('nav-open'),btn.setAttribute('aria-expanded','true')); });
+  if(back)back.addEventListener('click',close);
+  links.forEach(function(a){ a.addEventListener('click',close); });
+})();
+</script>
+</body>
+</html>

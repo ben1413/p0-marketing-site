@@ -3,6 +3,9 @@
   "functions": {
     "/api/agent/run": {},
     "/api/agents/list": {},
+    "/api/conclave/gaming/[...path]": {
+      "maxDuration": 60
+    },
     "/api/v1/agents/run/stream": {}
   }
 }

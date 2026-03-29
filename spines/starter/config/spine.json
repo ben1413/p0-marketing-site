@@ -1,0 +1,20 @@
+{
+  "name": "starter",
+  "version": "0.1.0",
+  "description": "Next.js + Firebase + Vercel + Stripe + Project0 Core",
+  "stack": [
+    "Next.js",
+    "Firebase",
+    "Google OAuth",
+    "Stripe",
+    "Vercel",
+    "Project0 Core"
+  ],
+  "requiredAccounts": ["gcp", "vercel", "stripe"],
+  "envTemplate": {
+    "P0_CORE_BASE_URL": "https://api.project0.dev",
+    "FIREBASE_PROJECT_ID": "",
+    "STRIPE_WEBHOOK_SECRET": "",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": ""
+  }
+}

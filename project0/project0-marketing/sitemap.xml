@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://project0.io/</loc>
+  </url>
+  <url>
+    <loc>https://project0.io/platform</loc>
+  </url>
+  <url>
+    <loc>https://project0.io/primitives</loc>
+  </url>
+  <url>
+    <loc>https://project0.io/projectbuild</loc>
+  </url>
+  <url>
+    <loc>https://project0.io/projectcore</loc>
+  </url>
+  <url>
+    <loc>https://project0.io/docs/core</loc>
+  </url>
+</urlset>

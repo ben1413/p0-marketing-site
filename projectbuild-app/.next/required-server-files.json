@@ -99,7 +99,7 @@
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/Users/benwilliams1413/Projects/projectbuild-app",
+    "outputFileTracingRoot": "/Users/benwilliams1413",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -156,7 +156,7 @@
       "proxyPrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 1,
+      "cpus": 9,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptTimeoutInSeconds": 7,
@@ -292,12 +292,12 @@
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
     "turbopack": {
-      "root": "/Users/benwilliams1413/Projects/projectbuild-app"
+      "root": "/Users/benwilliams1413"
     },
     "distDirRoot": ".next"
   },
   "appDir": "/Users/benwilliams1413/Projects/projectbuild-app",
-  "relativeAppDir": "",
+  "relativeAppDir": "Projects/projectbuild-app",
   "files": [
     ".next/routes-manifest.json",
     ".next/server/pages-manifest.json",

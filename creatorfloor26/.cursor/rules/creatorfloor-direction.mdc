@@ -1,0 +1,20 @@
+---
+description: CreatorFloor product north star — read CREATORFLOOR_DIRECTION.md before building
+alwaysApply: true
+---
+
+# CreatorFloor direction (source of truth)
+
+Before implementing features, refactors, or new abstractions in this repo, read **`CREATORFLOOR_DIRECTION.md`** at the project root. Do not duplicate that document here; treat it as the canonical vision, shipping phases, boundaries, and metrics.
+
+**Boundaries to honor**
+
+- **P0 Core** is the engine: governance, Brain, Ledger, gaming/live APIs, and shared contracts live there. This app is a **surface**, not a second source of truth for those primitives.
+- **CreatorFloor ≠ ProjectBuild**: separate product and community; hyper-casual creators first (Roblox/UEFN in phase 1). Do not assume ProjectBuild UX or merge repos without an explicit product decision.
+- Follow **“What not to build”** in `CREATORFLOOR_DIRECTION.md` (no game engine, no auto cross-compilation, no social network replacement, no rebuilding platform analytics from scratch, no competing with distribution platforms).
+
+**Traceability**
+
+Technical choices should map to something in `CREATORFLOOR_DIRECTION.md` or to explicit Core APIs—if they do not, pause and align with the doc or ask the user.
+
+Also see **`AGENTS.md`** for stack notes (Next.js) and the same read-first pointer.

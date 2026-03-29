@@ -10,6 +10,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Agent } from "@/types";
+import { dedupeAgentsByRole } from "@/types";
 
 interface BuilderAgentBarProps {
   projectId: string;
@@ -27,7 +28,7 @@ export function BuilderAgentBar({ projectId, isStreaming, onSend }: BuilderAgent
     fetch(`/api/agents/list?projectId=${projectId}`)
       .then((r) => r.json())
       .then((d: { items?: Agent[] }) => {
-        const items = d.items ?? [];
+        const items = dedupeAgentsByRole(d.items ?? []);
         setAgents(items);
         if (items.length > 0) setSelectedAgentId(items[0].id);
       })

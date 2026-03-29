@@ -13,6 +13,7 @@ import { useMessages } from "@/lib/hooks/useMessages";
 import { DesignerBubble } from "./DesignerBubble";
 import type { ThreadMessage, MessageBlock } from "@/types";
 import type { DesignerStreamingMessage } from "@/lib/designer/useDesignerStream";
+import { CircuitBreakBanner } from "@/components/circuit/CircuitBreakBanner";
 
 interface DesignerAgentChatProps {
   projectId: string;
@@ -74,13 +75,20 @@ export function DesignerAgentChat({ projectId, runId, streamingMsg, onPromote }:
         />
       ))}
 
-      {streamingMsg && (
+      {streamingMsg && !streamingMsg.circuitBreak && (
         <DesignerBubble
           key="__streaming__"
           message={makeStreamingMessage(streamingMsg)}
           onPromote={() => {}}
           promoted={false}
           isStreaming
+        />
+      )}
+
+      {streamingMsg?.circuitBreak && (
+        <CircuitBreakBanner
+          code={streamingMsg.circuitBreak.code}
+          reason={streamingMsg.circuitBreak.reason}
         />
       )}
 

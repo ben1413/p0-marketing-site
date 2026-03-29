@@ -47,6 +47,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 }
 
 
+// Validate ../../app/conclave/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/conclave">> = Specific
+  const handler = {} as typeof import("../../app/conclave/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
@@ -141,6 +150,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/agents/register">> = Specific
   const handler = {} as typeof import("../../app/api/agents/register/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/conclave/gaming/[...path]/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/conclave/gaming/[...path]">> = Specific
+  const handler = {} as typeof import("../../app/api/conclave/gaming/[...path]/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

@@ -122,6 +122,17 @@ export type Agent = {
   llm?: { model: string; provider: string };
 };
 
+/** Keep only the first agent per unique jobTitle — removes duplicate registrations from testing. */
+export function dedupeAgentsByRole(agents: Agent[]): Agent[] {
+  const seen = new Set<string>();
+  return agents.filter((a) => {
+    const key = a.jobTitle?.toLowerCase() ?? a.id;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 // Run response from Core
 export type TraceGuardrails = {
   maxTurnsPerMeeting?: number;

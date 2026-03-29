@@ -22,6 +22,14 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/api/conclave/gaming/[...path]",
+      "regex": "^/api/conclave/gaming/(.+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPpath": "nxtPpath"
+      },
+      "namedRegex": "^/api/conclave/gaming/(?<nxtPpath>.+?)(?:/)?$"
+    },
+    {
       "page": "/api/ledger/item/[id]",
       "regex": "^/api/ledger/item/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -138,6 +146,12 @@
       "regex": "^/api/voice/speak(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/voice/speak(?:/)?$"
+    },
+    {
+      "page": "/conclave",
+      "regex": "^/conclave(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/conclave(?:/)?$"
     },
     {
       "page": "/projects",

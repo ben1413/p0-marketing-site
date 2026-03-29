@@ -33,6 +33,18 @@ function PostureIndicator({ posture }: { posture?: TruthPosture }) {
   );
 }
 
+const POSTURE_TAG = /\[P0_TRUTH_POSTURE:\s*(known|inferred|unknown)\]/i;
+const POSTURE_TAG_GLOBAL = /\[P0_TRUTH_POSTURE:\s*(?:known|inferred|unknown)\]/gi;
+
+function stripPostureTag(text: string): string {
+  return text.replace(POSTURE_TAG_GLOBAL, "").trim();
+}
+
+function extractPosture(text: string): TruthPosture | undefined {
+  const match = text.match(POSTURE_TAG);
+  return match ? (match[1].toLowerCase() as TruthPosture) : undefined;
+}
+
 export function MessageFeed({ projectId, runId, trackId, ttsEnabled = false, onSpeak }: MessageFeedProps) {
   const messages = useMessages(projectId, runId, trackId);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -56,8 +68,8 @@ export function MessageFeed({ projectId, runId, trackId, ttsEnabled = false, onS
     lastSpokenIdRef.current = lastMsg.id;
     setSpeakingId(lastMsg.id);
     // Call immediately — don't wait for any animation frame or render cycle
-    onSpeak(lastMsg.text);
-    const wordCount = lastMsg.text.split(/\s+/).length;
+    onSpeak(stripPostureTag(lastMsg.text));
+    const wordCount = stripPostureTag(lastMsg.text).split(/\s+/).length;
     const ms = Math.max(2000, wordCount * 80);
     const t = setTimeout(() => setSpeakingId(null), ms);
     return () => clearTimeout(t);
@@ -88,7 +100,7 @@ export function MessageFeed({ projectId, runId, trackId, ttsEnabled = false, onS
                     <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-[var(--text-blue)]/70">
                       {m.agentJobTitle || m.authorName || "Agent"}
                     </span>
-                    <PostureIndicator posture={m.truthPosture} />
+                    <PostureIndicator posture={m.truthPosture ?? extractPosture(m.text)} />
                     {speakingId === m.id && (
                       <span className="ml-2 flex items-end gap-[2px] h-3">
                         <span className="w-[2px] rounded-full bg-emerald-400/70 animate-[bounce_0.6s_ease-in-out_infinite]" style={{ height: "60%", animationDelay: "0ms" }} />
@@ -116,7 +128,7 @@ export function MessageFeed({ projectId, runId, trackId, ttsEnabled = false, onS
                   speakingId === m.id ? "border-emerald-500/20" : ""
                 }`}
               >
-                {m.text}
+                {stripPostureTag(m.text)}
 
                 {/* Action chips */}
                 {m.actionsApplied && m.actionsApplied.length > 0 && (

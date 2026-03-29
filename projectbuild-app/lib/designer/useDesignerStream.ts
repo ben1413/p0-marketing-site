@@ -29,11 +29,14 @@ type DesignerStreamEvent =
   | { type: "file_explored"; files: string[]; label?: string }
   | { type: "todo_list"; tasks: TodoTask[] }
   | { type: "todo_update"; taskId: string; status: TodoTask["status"] }
-  | { type: "canvas_update"; elements: CanvasElement[]; description?: string };
+  | { type: "canvas_update"; elements: CanvasElement[]; description?: string }
+  | { type: "circuit_break"; reason?: string; code?: string }
+  | { type: "error"; error?: string; code?: string };
 
 export type DesignerStreamingMessage = {
   blocks: MessageBlock[];
   agentId?: string;
+  circuitBreak?: { reason?: string; code?: string };
 };
 
 interface UseDesignerStreamOptions {
@@ -52,6 +55,17 @@ export function useDesignerStream({ projectId, runId, agentJobTitle }: UseDesign
   const agentIdRef = useRef<string | undefined>(undefined);
 
   function applyEvent(event: DesignerStreamEvent) {
+    if (event.type === "circuit_break" || event.type === "error") {
+      setStreamingMsg({
+        blocks: [...blocksRef.current],
+        agentId: agentIdRef.current,
+        circuitBreak: {
+          reason: (event as { reason?: string }).reason ?? (event as { error?: string }).error,
+          code: (event as { code?: string }).code,
+        },
+      });
+      return;
+    }
     if (event.type === "canvas_update") {
       // Surface as pending preview — not into the blocks array
       setPendingCanvasUpdate(event.elements);
@@ -87,6 +101,15 @@ export function useDesignerStream({ projectId, runId, agentJobTitle }: UseDesign
         });
 
         if (!res.ok || !res.body) {
+          if (res.status === 403) {
+            const errorBody = await res.json().catch(() => ({})) as { error?: string; code?: string };
+            setStreamingMsg({
+              blocks: [],
+              agentId,
+              circuitBreak: { reason: errorBody.error, code: errorBody.code },
+            });
+            return;
+          }
           throw new Error(`Stream failed: ${res.status}`);
         }
 

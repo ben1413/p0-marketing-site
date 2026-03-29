@@ -31,11 +31,15 @@ type StreamEvent =
   | { type: "file_explored"; files: string[]; label?: string }
   | { type: "todo_list"; tasks: TodoTask[] }
   | { type: "todo_update"; taskId: string; status: TodoTask["status"] }
-  | { type: "diff"; before: string; after: string; filePath: string };
+  | { type: "diff"; before: string; after: string; filePath: string }
+  | { type: "circuit_break"; reason?: string; code?: string }
+  | { type: "error"; error?: string; code?: string };
 
 export type StreamingMessage = {
   blocks: MessageBlock[];
   agentId?: string;
+  /** Set when the circuit breaker terminates the stream mid-run. */
+  circuitBreak?: { reason?: string; code?: string };
 };
 
 interface UseBuilderStreamOptions {
@@ -54,6 +58,17 @@ export function useBuilderStream({ projectId, runId, agentJobTitle }: UseBuilder
   const agentIdRef = useRef<string | undefined>(undefined);
 
   function applyEvent(event: StreamEvent) {
+    if (event.type === "circuit_break" || event.type === "error") {
+      setStreamingMsg({
+        blocks: [...blocksRef.current],
+        agentId: agentIdRef.current,
+        circuitBreak: {
+          reason: (event as { reason?: string }).reason ?? (event as { error?: string }).error,
+          code: (event as { code?: string }).code,
+        },
+      });
+      return;
+    }
     blocksRef.current = assembleBlocks(blocksRef.current, event);
     setStreamingMsg({ blocks: [...blocksRef.current], agentId: agentIdRef.current });
   }
@@ -75,6 +90,15 @@ export function useBuilderStream({ projectId, runId, agentJobTitle }: UseBuilder
         });
 
         if (!res.ok || !res.body) {
+          if (res.status === 403) {
+            const errorBody = await res.json().catch(() => ({})) as { error?: string; code?: string };
+            setStreamingMsg({
+              blocks: [],
+              agentId,
+              circuitBreak: { reason: errorBody.error, code: errorBody.code },
+            });
+            return;
+          }
           throw new Error(`Stream failed: ${res.status}`);
         }
 

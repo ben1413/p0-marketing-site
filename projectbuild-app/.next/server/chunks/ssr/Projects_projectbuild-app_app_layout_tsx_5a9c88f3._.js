@@ -1,0 +1,3 @@
+module.exports=[99055,a=>{"use strict";var b=a.i(84508);function c({children:a}){return(0,b.jsx)("html",{lang:"en",children:(0,b.jsx)("body",{className:"antialiased",children:a})})}a.s(["default",()=>c,"metadata",0,{title:"ProjectBuild",description:"AI-native collaboration platform"},"viewport",0,{themeColor:"#0b0f14"}])}];
+
+//# sourceMappingURL=Projects_projectbuild-app_app_layout_tsx_5a9c88f3._.js.map

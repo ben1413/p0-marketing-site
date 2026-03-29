@@ -12,6 +12,8 @@ import { BuilderButtonAndShell } from "@/components/builder/BuilderButtonAndShel
 import { DesignerButtonAndShell } from "@/components/designer/DesignerButtonAndShell";
 import Link from "next/link";
 import type { Agent, RunSimpleResponse, BoardAction } from "@/types";
+import { dedupeAgentsByRole } from "@/types";
+import { CircuitBreakBanner } from "@/components/circuit/CircuitBreakBanner";
 
 interface ProjectRoomProps {
   projectId: string;
@@ -38,6 +40,7 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [runId, setRunId] = useState("");
   const [runError, setRunError] = useState<string | null>(null);
+  const [circuitBreak, setCircuitBreak] = useState<{ code?: string; reason?: string; agentName?: string } | null>(null);
   const seededWelcomeRef = useRef(false);
   const { supported: ttsSupported, enabled: ttsEnabled, speaking: ttsSpeaking, speak, toggle: toggleTTS } = useTTS();
 
@@ -52,7 +55,7 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
     fetch(`/api/agents/list?projectId=${projectId}`)
       .then((r) => r.json())
       .then((d: { items?: Agent[] }) => {
-        const items = d.items ?? [];
+        const items = dedupeAgentsByRole(d.items ?? []);
         setAgents(items);
         if (items.length > 0) setSelectedAgentId(items[0].id);
       })
@@ -107,7 +110,14 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
               };
             };
             const govDecisions = selfData?.self?.recent_gov_decisions;
-            const roster = selfData?.self?.roster;
+            const rawRoster = selfData?.self?.roster;
+            const rosterSeen = new Set<string>();
+            const roster = rawRoster?.filter((r) => {
+              const key = (r.job_title ?? r.name ?? "").toLowerCase();
+              if (rosterSeen.has(key)) return false;
+              rosterSeen.add(key);
+              return true;
+            });
 
             if (govDecisions && govDecisions.length > 0) {
               const latest = govDecisions[0];
@@ -149,6 +159,7 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
     if (!runId) return;
     setIsRunning(true);
     setRunError(null);
+    setCircuitBreak(null);
 
     // Write human message to Firestore immediately
     await addDoc(collection(db, "pb_messages"), {
@@ -179,6 +190,19 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
       if (res.status === 429) {
         const reason = (data as { error?: string }).error ?? "Turn limit reached. Start a new conversation or contact your admin to adjust limits.";
         setRunError(reason);
+        setIsRunning(false);
+        return;
+      }
+
+      // 403 = circuit breaker gate rejection or governance block
+      if (res.status === 403) {
+        const errorBody = data as { error?: string; code?: string };
+        const agentName = agents.find((a) => a.id === selectedAgentId)?.jobTitle ?? "Agent";
+        setCircuitBreak({
+          code: errorBody.code,
+          reason: errorBody.error,
+          agentName,
+        });
         setIsRunning(false);
         return;
       }
@@ -277,6 +301,17 @@ export function ProjectRoom({ projectId }: ProjectRoomProps) {
               >
                 X
               </button>
+            </div>
+          )}
+
+          {circuitBreak && (
+            <div className="mx-8">
+              <CircuitBreakBanner
+                code={circuitBreak.code}
+                reason={circuitBreak.reason}
+                agentName={circuitBreak.agentName}
+                onDismiss={() => setCircuitBreak(null)}
+              />
             </div>
           )}
 

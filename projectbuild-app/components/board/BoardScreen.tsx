@@ -8,6 +8,7 @@ import { ProjectSurfaceShell } from "@/components/layout/ProjectSurfaceShell";
 import { BuilderButtonAndShell } from "@/components/builder/BuilderButtonAndShell";
 import { DesignerButtonAndShell } from "@/components/designer/DesignerButtonAndShell";
 import type { BoardColumnId, BoardItem, Agent } from "@/types";
+import { dedupeAgentsByRole } from "@/types";
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -185,7 +186,7 @@ export function BoardScreen({ projectId }: BoardScreenProps) {
   useEffect(() => {
     fetch(`/api/agents/list?projectId=${projectId}`)
       .then((r) => r.json())
-      .then((d: { items?: Agent[] }) => setAgents(d.items ?? []))
+      .then((d: { items?: Agent[] }) => setAgents(dedupeAgentsByRole(d.items ?? [])))
       .catch(() => {});
   }, [projectId]);
 

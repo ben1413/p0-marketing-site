@@ -1,0 +1,3 @@
+{
+  "/api/conclave/gaming/[...path]/route": "app/api/conclave/gaming/[...path]/route.js"
+}

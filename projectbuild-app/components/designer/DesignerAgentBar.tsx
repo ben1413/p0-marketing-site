@@ -12,6 +12,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import type { Agent } from "@/types";
+import { dedupeAgentsByRole } from "@/types";
 
 interface DesignerAgentBarProps {
   projectId: string;
@@ -29,7 +30,7 @@ export function DesignerAgentBar({ projectId, isStreaming, onSend }: DesignerAge
     fetch(`/api/agents/list?projectId=${projectId}`)
       .then((r) => r.json())
       .then((d: { items?: Agent[] }) => {
-        const items = d.items ?? [];
+        const items = dedupeAgentsByRole(d.items ?? []);
         setAgents(items);
         if (items.length > 0 && !selectedAgentId) {
           setSelectedAgentId(items[0].id);

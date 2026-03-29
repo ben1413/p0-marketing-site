@@ -1,0 +1,26 @@
+{
+  "name": "p0-cli",
+  "version": "0.1.0",
+  "description": "Project0 CLI — spine installation and deployment",
+  "type": "module",
+  "bin": {
+    "p0": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "spine:list": "node dist/index.js spine list",
+    "spine:install": "node dist/index.js spine install starter"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

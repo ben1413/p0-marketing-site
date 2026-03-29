@@ -1,0 +1,14 @@
+{
+  "name": "creatorfloor-companion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local companion for ProjectBuild: folder-scoped file access via localhost API. Runs on port 3001. Solo Companion uses 3847 — both can run simultaneously.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "companion": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

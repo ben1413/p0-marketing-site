@@ -1,0 +1,13 @@
+{
+  "id": "starter-spine",
+  "name": "Starter Spine",
+  "stack": "Next.js + Firebase + Vercel",
+  "included": [
+    "Auth + identity",
+    "Multi-tenant isolation",
+    "API spine with validation",
+    "Governance + promote boundary",
+    "Ledger hooks",
+    "Deployment pipeline"
+  ]
+}

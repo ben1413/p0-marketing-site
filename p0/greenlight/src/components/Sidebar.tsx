@@ -13,8 +13,13 @@ import {
   ChevronDown,
   Settings,
   Zap,
+  CalendarDays,
+  TrendingUp,
+  BookLock,
 } from "lucide-react";
 import { clsx } from "clsx";
+import { DEMO_DECISIONS } from "@/lib/seed";
+import { useDemoEvents } from "@/lib/demoEmitter";
 
 const nav = [
   {
@@ -22,6 +27,8 @@ const nav = [
     items: [
       { href: "/dashboard",  label: "Dashboard",    icon: LayoutDashboard },
       { href: "/proposals",  label: "Proposals",    icon: GitPullRequest },
+      { href: "/calendar",   label: "Calendar",     icon: CalendarDays },
+      { href: "/outcomes",   label: "Outcomes",     icon: TrendingUp },
       { href: "/deploys",    label: "Deploys",      icon: Rocket },
       { href: "/experiments",label: "Experiments",  icon: FlaskConical },
     ],
@@ -36,10 +43,31 @@ const nav = [
       { href: "/why-not-build",   label: "Why Not Build?",  icon: ChevronDown },
     ],
   },
+  {
+    section: "System of Record",
+    items: [
+      { href: "/ledger", label: "Ledger", icon: BookLock },
+    ],
+  },
 ];
+
+function computePendingCount(): number {
+  return DEMO_DECISIONS.filter(
+    (d) =>
+      d.expectedApprovers?.some((a) => a.status === "awaiting") ||
+      d.status === "proposed" ||
+      d.status === "blocked"
+  ).length;
+}
 
 export function Sidebar() {
   const pathname = usePathname();
+  const pendingCount = computePendingCount();
+  const { events: liveEvents } = useDemoEvents();
+  const livePending = liveEvents.filter(
+    (e) => e.type === "proposed" || e.type === "blocked"
+  ).length;
+  const totalPending = pendingCount + livePending;
 
   return (
     <aside className="w-60 flex flex-col border-r border-zinc-800 bg-zinc-950 shrink-0">
@@ -63,6 +91,15 @@ export function Sidebar() {
         </button>
       </div>
 
+      {/* System heartbeat */}
+      <div className="px-5 pb-3 flex items-center gap-2">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gl-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-gl-500" />
+        </span>
+        <span className="text-[10px] text-zinc-600">System active</span>
+      </div>
+
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-5">
         {nav.map((group) => (
@@ -83,7 +120,15 @@ export function Sidebar() {
                       )}
                     >
                       <Icon className="w-4 h-4 shrink-0" />
-                      {label}
+                      <span className="flex-1">{label}</span>
+                      {href === "/proposals" && totalPending > 0 && (
+                        <span
+                          key={totalPending}
+                          className="flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-zinc-950 text-[10px] font-bold leading-none animate-badge-pop"
+                        >
+                          {totalPending}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );
@@ -92,6 +137,18 @@ export function Sidebar() {
           </div>
         ))}
       </nav>
+
+      {/* Powered by P0 Core */}
+      <div className="px-5 py-3 border-t border-zinc-800">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded bg-purple-500/20 flex items-center justify-center">
+            <span className="text-[8px] font-bold text-purple-400">P0</span>
+          </div>
+          <span className="text-[10px] text-zinc-600">
+            Powered by <span className="text-purple-400/70 font-medium">Project0 Core</span>
+          </span>
+        </div>
+      </div>
 
       {/* Footer */}
       <div className="px-3 py-4 border-t border-zinc-800">

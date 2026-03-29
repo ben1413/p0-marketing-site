@@ -2,7 +2,7 @@
 
 import { clsx } from "clsx";
 import type { TrailEvent } from "@/lib/types";
-import { TRAIL_EVENT_LABELS } from "@/lib/plainLanguage";
+import { TRAIL_EVENT_LABELS, timeAgo } from "@/lib/plainLanguage";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 
 const EVENT_DOT: Record<string, string> = {
@@ -60,13 +60,8 @@ export function TrailEventList({ events }: Props) {
                   {TRAIL_EVENT_LABELS[event.type] ?? event.type}
                 </span>
                 <span className="text-xs text-zinc-500">·</span>
-                <span className="text-xs text-zinc-500">
-                  {new Date(event.timestamp).toLocaleString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                <span className="text-xs text-zinc-500" title={new Date(event.timestamp).toLocaleString()}>
+                  {timeAgo(event.timestamp)}
                 </span>
                 {/* Sealed badge — this is the moat */}
                 {isSealed && (

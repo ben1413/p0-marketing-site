@@ -71,6 +71,14 @@ export type TrailEvent = {
   description: string;
   timestamp: string;
   metadata?: Record<string, unknown>;
+  /** SHA-256 commitment hash computed at seal time */
+  commitmentHash?: string;
+  /** Evaluation boundary this event was sealed under */
+  evaluationId?: string;
+  /** For outcomes/rollbacks: the sealed entry this derives from */
+  parentLedgerId?: string;
+  /** Authority mode declared at seal time */
+  authorityMode?: "human_led" | "human_in_the_loop" | "agent_autonomous";
 };
 
 // ---------------------------------------------------------------------------
@@ -133,6 +141,15 @@ export type Decision = {
   trail: TrailEvent[];
   /** Whether this proposal is currently blocked and why */
   blockReason?: string;
+  /** Expected approval chain — who needs to sign off */
+  expectedApprovers?: Approver[];
+};
+
+export type Approver = {
+  name: string;
+  role: string;
+  status: "approved" | "awaiting" | "rejected";
+  at?: string;
 };
 
 // ---------------------------------------------------------------------------

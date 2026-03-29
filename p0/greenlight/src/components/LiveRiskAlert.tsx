@@ -41,7 +41,7 @@ export function LiveRiskAlert({
   recommendation,
 }: LiveRiskAlertProps) {
   return (
-    <div className="rounded-xl border border-red-700/60 bg-red-950/20 overflow-hidden">
+    <div className="rounded-xl border border-red-700/60 bg-red-950/20 overflow-hidden animate-risk-breathe">
       {/* Header stripe */}
       <div className="flex items-center gap-2.5 px-4 py-2.5 bg-red-950/40 border-b border-red-800/40">
         <span className="flex items-center gap-1.5">

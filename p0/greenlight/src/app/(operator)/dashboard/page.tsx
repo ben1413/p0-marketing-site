@@ -3,13 +3,18 @@ import { DEMO_SYSTEM_STATE, DEMO_DECISIONS } from "@/lib/seed";
 import { SystemHealth } from "@/components/SystemHealth";
 import { DecisionCard } from "@/components/DecisionCard";
 import { LiveRiskAlert } from "@/components/LiveRiskAlert";
+import { ActivityFeed } from "@/components/ActivityFeed";
+import { GovernanceMetricsCard } from "@/components/GovernanceMetricsCard";
 import { PageHeader } from "@/components/PageHeader";
+import { UsageSummaryCard } from "@/components/UsageSummaryCard";
+import { P0CoreStrip } from "@/components/P0CoreStrip";
+import { timeAgo } from "@/lib/plainLanguage";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 
 export const metadata: Metadata = { title: "Dashboard — Greenlight" };
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   const state = DEMO_SYSTEM_STATE;
 
   // Surface the most urgent decisions on the dashboard — blocked + recent pending
@@ -39,7 +44,7 @@ export default function DashboardPage() {
           proposalTitle={liveRisk.title}
           domain={liveRisk.type.charAt(0).toUpperCase() + liveRisk.type.slice(1)}
           deployed={liveRisk.outcome.deployedAt
-            ? new Date(liveRisk.outcome.deployedAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })
+            ? timeAgo(liveRisk.outcome.deployedAt)
             : "recently"}
           finding={`Outcome measured after deployment. ${liveRisk.simulationSummary ?? "Performing outside predicted range."}`}
           delta={
@@ -53,6 +58,24 @@ export default function DashboardPage() {
 
       {/* System Health — narrative first, always */}
       <SystemHealth state={state} />
+
+      {/* Governance health metrics — makes dashboard operational */}
+      <GovernanceMetricsCard decisions={DEMO_DECISIONS} />
+
+      {/* P0 Core intelligence strip — the moat made visible */}
+      <P0CoreStrip />
+
+      <UsageSummaryCard />
+
+      {/* Activity feed — makes the product feel alive */}
+      <section>
+        <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+          Recent activity
+        </h2>
+        <div className="gl-card p-0 overflow-hidden">
+          <ActivityFeed decisions={DEMO_DECISIONS} />
+        </div>
+      </section>
 
       {/* Quick view — urgent decisions */}
       <section>

@@ -8,6 +8,7 @@ import {
   DECISION_TYPE_LABELS,
   describeAuthorityMode,
   describeGovernanceTier,
+  timeAgo,
 } from "@/lib/plainLanguage";
 import { PrinterIcon, FunnelIcon } from "@heroicons/react/20/solid";
 
@@ -137,12 +138,8 @@ export function GovernanceAuditTable({ records }: Props) {
                     <span className="text-zinc-600">—</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-zinc-500">
-                  {new Date(r.createdAt).toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                <td className="px-4 py-3 text-zinc-500" title={new Date(r.createdAt).toLocaleString()}>
+                  {timeAgo(r.createdAt)}
                 </td>
                 <td className="px-4 py-3 no-print">
                   {r.ledgerItemId ? (

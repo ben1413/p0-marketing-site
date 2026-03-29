@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { clsx } from "clsx";
 import type { SystemState } from "@/lib/types";
-import { describeGovernanceHealth } from "@/lib/plainLanguage";
+import { describeGovernanceHealth, timeAgo } from "@/lib/plainLanguage";
 import { DomainCard } from "./DomainCard";
 import { AgentStrip } from "./AgentStrip";
 import {
@@ -36,7 +36,7 @@ export function SystemHealth({ state }: Props) {
             {state.narrative}
           </p>
           <p className="text-xs text-zinc-500 mt-0.5">
-            {describeGovernanceHealth(state.governanceHealth)} · Last updated {new Date(state.capturedAt).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}
+            {describeGovernanceHealth(state.governanceHealth)} · Updated {timeAgo(state.capturedAt)}
           </p>
         </div>
       </div>

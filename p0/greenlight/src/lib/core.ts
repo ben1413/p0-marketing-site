@@ -73,9 +73,36 @@ export type DashboardData = {
   };
 };
 
+/** Mirrors GET /api/v1/metrics/usage on Core (display-only pct/remaining; status is canonical). */
+export type QuotaUsageEntry = {
+  used: number;
+  limit: number;
+  status: string;
+  pct: number | null;
+  remaining: number | null;
+};
+
+export type CoreUsageSummary = {
+  ok: boolean;
+  projectId: string;
+  period: string;
+  tier: string;
+  usage: Record<string, QuotaUsageEntry>;
+};
+
 // ---------------------------------------------------------------------------
 // Data fetchers
 // ---------------------------------------------------------------------------
+
+/** Returns null if no API key configured or Core request fails (UI should degrade gracefully). */
+export async function coreGetUsage(period?: string): Promise<CoreUsageSummary | null> {
+  if (!API_KEY) return null;
+  try {
+    return await coreGet<CoreUsageSummary>("/metrics/usage", period ? { period } : undefined);
+  } catch {
+    return null;
+  }
+}
 
 export async function getDashboardData(): Promise<DashboardData> {
   const [proposalsRes, incidentsRes] = await Promise.allSettled([

@@ -61,8 +61,12 @@ export const DEMO_AGENTS: AgentIdentity[] = [
 // Trail events helpers
 // ---------------------------------------------------------------------------
 
-function daysAgo(n: number, h = 0): string {
-  return new Date(Date.now() - 1000 * 60 * 60 * (n * 24 + h)).toISOString();
+function daysAgo(n: number, h = 0, m = 0): string {
+  return new Date(Date.now() - 1000 * 60 * (n * 24 * 60 + h * 60 + m)).toISOString();
+}
+
+function minutesAgo(m: number): string {
+  return new Date(Date.now() - 1000 * 60 * m).toISOString();
 }
 
 function trail(...events: Omit<TrailEvent, "id">[]): TrailEvent[] {
@@ -103,15 +107,15 @@ export const DEMO_DECISIONS: Decision[] = [
     createdAt: daysAgo(15),
     updatedAt: daysAgo(9),
     trail: trail(
-      { type: "proposed",  actor: "Ana (Analyst Agent)",        description: "Proposed based on veteran segment retention analysis. Risk score 0.18.",          timestamp: daysAgo(15) },
-      { type: "simulated", actor: "Simulation runner",           description: "Simulation passed — composite 0.74, confidence 0.81. Hash locked.",               timestamp: daysAgo(14, 2) },
-      { type: "approved",  actor: "Priya Mehta (human_led)",     description: "Approved after reviewing simulation report. Confidence above threshold.",         timestamp: daysAgo(14) },
-      { type: "deployed",  actor: "Priya Mehta (human_led)",     description: "Deployed via one-call authorize. DeploymentId: deploy-001-abc. Ledger sealed.",   timestamp: daysAgo(12) },
-      { type: "outcome_recorded", actor: "Measurement system",  description: "Retention +11% vs predicted +8%. Revenue +3% vs predicted +2%. Performing better than expected.", timestamp: daysAgo(9) }
+      { type: "proposed",  actor: "Ana (Analyst Agent)",        description: "Proposed based on veteran segment retention analysis. Risk score 0.18.",          timestamp: daysAgo(15), evaluationId: "eval-001", authorityMode: "agent_autonomous" },
+      { type: "simulated", actor: "Simulation runner",           description: "Simulation passed — composite 0.74, confidence 0.81. Hash locked.",               timestamp: daysAgo(14, 2), evaluationId: "eval-001", commitmentHash: "sha256:7a3f1c82e4b9d6a0f518c3e2...d41a" },
+      { type: "approved",  actor: "Priya Mehta (human_led)",     description: "Approved after reviewing simulation report. Confidence above threshold.",         timestamp: daysAgo(14), evaluationId: "eval-001", authorityMode: "human_led", commitmentHash: "sha256:b2e9f41d8c7a3560eb12f8a7...c903" },
+      { type: "deployed",  actor: "Priya Mehta (human_led)",     description: "Deployed via one-call authorize. DeploymentId: deploy-001-abc. Ledger sealed.",   timestamp: daysAgo(12), evaluationId: "eval-001", authorityMode: "human_led", commitmentHash: "sha256:e8c4a71f2b590d63fa847b1e...8f2d" },
+      { type: "outcome_recorded", actor: "Measurement system",  description: "Retention +11% vs predicted +8%. Revenue +3% vs predicted +2%. Performing better than expected.", timestamp: daysAgo(9), evaluationId: "eval-001", parentLedgerId: "ledger-item-001", commitmentHash: "sha256:91d3f8e2a4c76b05182e9fd3...a71c" }
     ),
   },
 
-  // 2 — BLOCKED (the simulation gate wow moment)
+  // 2 — BLOCKED (the simulation gate wow moment) — blocked 12 minutes ago
   {
     id: "dec-002",
     gameId: DEMO_GAME_ID,
@@ -127,16 +131,20 @@ export const DEMO_DECISIONS: Decision[] = [
     simulationAge: "9 hours ago",
     simulationSummary: "Simulation was run before the MMR range was adjusted. Decision changed after simulation.",
     blockReason: "[SIMULATION_STALE] Simulation is 9 hours old (matchmaking threshold: 30 minutes). Re-run simulation before deploy.",
-    createdAt: daysAgo(2),
-    updatedAt: daysAgo(0, 9),
+    createdAt: daysAgo(1, 6),
+    updatedAt: minutesAgo(12),
     trail: trail(
-      { type: "proposed",  actor: "Ana (Analyst Agent)",    description: "Proposed after queue analysis. Original MMR range: 250.",             timestamp: daysAgo(2) },
-      { type: "simulated", actor: "Simulation runner",       description: "Simulation passed — composite 0.68, matchmaking type (30m threshold).", timestamp: daysAgo(0, 11) },
-      { type: "blocked",   actor: "Deployment gate",         description: "[SIMULATION_STALE] Simulation 9h old. Matchmaking requires simulation within 30m of deploy. Re-run required.", timestamp: daysAgo(0, 0) }
+      { type: "proposed",  actor: "Ana (Analyst Agent)",    description: "Proposed after queue analysis. Original MMR range: 250.",             timestamp: daysAgo(1, 6), evaluationId: "eval-002", authorityMode: "agent_autonomous" },
+      { type: "simulated", actor: "Simulation runner",       description: "Simulation passed — composite 0.68, matchmaking type (30m threshold).", timestamp: daysAgo(0, 9), evaluationId: "eval-002", commitmentHash: "sha256:4f8a2c61e7b3d9051a6f2e84...b73e" },
+      { type: "blocked",   actor: "Deployment gate",         description: "[SIMULATION_STALE] Simulation 9h old. Matchmaking requires simulation within 30m of deploy. Re-run required.", timestamp: minutesAgo(12), evaluationId: "eval-002", commitmentHash: "sha256:d91c3e7f8a4b260518e2f9a3...41fd" }
     ),
+    expectedApprovers: [
+      { name: "Dev Patel", role: "Lead Designer", status: "awaiting" },
+      { name: "Sarah Chen", role: "Live Ops Director", status: "awaiting" },
+    ],
   },
 
-  // 3 — PENDING, needs simulation (classic "needs attention")
+  // 3 — PENDING, needs simulation — proposed 3 hours ago
   {
     id: "dec-003",
     gameId: DEMO_GAME_ID,
@@ -149,14 +157,19 @@ export const DEMO_DECISIONS: Decision[] = [
     governanceTier: "critical",
     proposedActions: { regions: ["NA", "EU", "LATAM", "SEA"], priceMultiplier: { LATAM: 0.6, SEA: 0.65, NA: 1.0, EU: 1.1 } },
     simulationStatus: "none",
-    createdAt: daysAgo(1),
-    updatedAt: daysAgo(1),
+    createdAt: daysAgo(0, 3),
+    updatedAt: daysAgo(0, 3),
     trail: trail(
-      { type: "proposed", actor: "Marcus (Designer Agent)", description: "Proposed for Q2 seasonal pass. Critical tier — simulation required before approval.", timestamp: daysAgo(1) }
+      { type: "proposed", actor: "Marcus (Designer Agent)", description: "Proposed for Q2 seasonal pass. Critical tier — simulation required before approval.", timestamp: daysAgo(0, 3), evaluationId: "eval-003", authorityMode: "agent_autonomous" }
     ),
+    expectedApprovers: [
+      { name: "Dev Patel", role: "Lead Designer", status: "awaiting" },
+      { name: "Sarah Chen", role: "Live Ops Director", status: "awaiting" },
+      { name: "Lena Torres", role: "Producer", status: "awaiting" },
+    ],
   },
 
-  // 4 — APPROVED, waiting to deploy
+  // 4 — APPROVED, waiting to deploy — approved 38 minutes ago
   {
     id: "dec-004",
     gameId: DEMO_GAME_ID,
@@ -169,16 +182,19 @@ export const DEMO_DECISIONS: Decision[] = [
     governanceTier: "promoted",
     proposedActions: { event: "winter-2026", challengeDay: 14, unlockAt: "2026-03-30T18:00:00Z" },
     simulationStatus: "passed",
-    simulationAge: "4 hours ago",
+    simulationAge: "2 hours ago",
     simulationScore: { composite: 0.81, revenue: 0.22, retention: 0.71, risk: 0.12, confidence: 0.88 },
     simulationSummary: "Strong engagement signal. Low risk. Revenue boost from accelerated pass completions.",
-    createdAt: daysAgo(0, 8),
-    updatedAt: daysAgo(0, 3),
+    createdAt: daysAgo(0, 4, 30),
+    updatedAt: minutesAgo(38),
     trail: trail(
-      { type: "proposed",  actor: "Marcus (Designer Agent)", description: "Proposed 8h ago based on Winter event engagement metrics.",              timestamp: daysAgo(0, 8) },
-      { type: "simulated", actor: "Simulation runner",        description: "Simulation passed — composite 0.81, confidence 0.88.",                  timestamp: daysAgo(0, 5) },
-      { type: "approved",  actor: "Dev Patel (human_led)",    description: "Approved. Ready to deploy when coordination window opens.",              timestamp: daysAgo(0, 3) }
+      { type: "proposed",  actor: "Marcus (Designer Agent)", description: "Proposed based on Winter event engagement metrics.",              timestamp: daysAgo(0, 4, 30), evaluationId: "eval-004", authorityMode: "agent_autonomous" },
+      { type: "simulated", actor: "Simulation runner",        description: "Simulation passed — composite 0.81, confidence 0.88.",                  timestamp: daysAgo(0, 2), evaluationId: "eval-004", commitmentHash: "sha256:c5f2a91e3d84b7061f28e3c9...e84a" },
+      { type: "approved",  actor: "Dev Patel (human_led)",    description: "Approved. Ready to deploy when coordination window opens.",              timestamp: minutesAgo(38), evaluationId: "eval-004", authorityMode: "human_led", commitmentHash: "sha256:2e8d4f7c1a93b5602d71f8e4...b6c2" }
     ),
+    expectedApprovers: [
+      { name: "Dev Patel", role: "Lead Designer", status: "approved", at: minutesAgo(38) },
+    ],
   },
 
   // 5 — REJECTED
@@ -199,9 +215,10 @@ export const DEMO_DECISIONS: Decision[] = [
     createdAt: daysAgo(5),
     updatedAt: daysAgo(4),
     trail: trail(
-      { type: "proposed",  actor: "Ana (Analyst Agent)",    description: "Proposed based on player feedback. Revenue risk noted.",                               timestamp: daysAgo(5) },
-      { type: "simulated", actor: "Simulation runner",       description: "Simulation FAILED — risk 0.84 exceeds threshold (0.80). Economy inflation predicted.", timestamp: daysAgo(5) },
-      { type: "rejected",  actor: "Priya Mehta (human_led)", description: "Rejected — simulation risk score too high. Consider smaller multiplier (1.25–1.5) with limited targeting.", timestamp: daysAgo(4) }
+      { type: "proposed",  actor: "Ana (Analyst Agent)",    description: "Proposed based on player feedback. Revenue risk noted.",                               timestamp: daysAgo(5), evaluationId: "eval-005", authorityMode: "agent_autonomous" },
+      { type: "simulated", actor: "Simulation runner",       description: "Simulation FAILED — risk 0.84 exceeds threshold (0.80). Economy inflation predicted.", timestamp: daysAgo(5), evaluationId: "eval-005", commitmentHash: "sha256:f3e1d8a2c47b9605182e4f7a...9d3c" },
+      { type: "rejected",  actor: "Priya Mehta (human_led)", description: "Rejected — simulation risk score too high. Consider smaller multiplier (1.25–1.5) with limited targeting.", timestamp: daysAgo(4), evaluationId: "eval-005", authorityMode: "human_led", commitmentHash: "sha256:8b2c4e7f1a63d90518f2e3a4...c71e" },
+      { type: "superseded", actor: "System", description: "Superseded by dec-001 (veteran sword drop rate) which addressed the same retention concern with lower risk.", timestamp: daysAgo(3), evaluationId: "eval-005", commitmentHash: "sha256:a14f8c2e3b7d96051e82f4a9...e2b3" }
     ),
   },
 
@@ -233,11 +250,11 @@ export const DEMO_DECISIONS: Decision[] = [
     createdAt: daysAgo(22),
     updatedAt: daysAgo(17),
     trail: trail(
-      { type: "proposed",        actor: "Kai (Operator Agent)",    description: "Proposed after spike in reported toxic language.",                                   timestamp: daysAgo(22) },
-      { type: "simulated",       actor: "Simulation runner",        description: "Simulation passed — moderate confidence (0.69). Risk 0.31.",                         timestamp: daysAgo(21) },
-      { type: "approved",        actor: "Priya Mehta (human_led)",  description: "Approved with note: monitor false positive rate closely.",                           timestamp: daysAgo(21) },
-      { type: "deployed",        actor: "Dev Patel (human_led)",    description: "Deployed. DeploymentId: deploy-006-xyz. Sealed to Ledger.",                          timestamp: daysAgo(20) },
-      { type: "outcome_recorded", actor: "Measurement system",     description: "Retention -3% vs predicted +5%. False positive mutes causing player frustration. Rollback recommended.", timestamp: daysAgo(17) }
+      { type: "proposed",        actor: "Kai (Operator Agent)",    description: "Proposed after spike in reported toxic language.",                                   timestamp: daysAgo(22), evaluationId: "eval-006", authorityMode: "agent_autonomous" },
+      { type: "simulated",       actor: "Simulation runner",        description: "Simulation passed — moderate confidence (0.69). Risk 0.31.",                         timestamp: daysAgo(21), evaluationId: "eval-006", commitmentHash: "sha256:3d9e1f8a2c4b7605a182e3f4...7b91" },
+      { type: "approved",        actor: "Priya Mehta (human_led)",  description: "Approved with note: monitor false positive rate closely.",                           timestamp: daysAgo(21), evaluationId: "eval-006", authorityMode: "human_led", commitmentHash: "sha256:e2f4a91c3d8b76051a82e9f3...c4d8" },
+      { type: "deployed",        actor: "Dev Patel (human_led)",    description: "Deployed. DeploymentId: deploy-006-xyz. Sealed to Ledger.",                          timestamp: daysAgo(20), evaluationId: "eval-006", authorityMode: "human_led", commitmentHash: "sha256:1c8f4e2a3b7d960518e2f3a4...9e71" },
+      { type: "outcome_recorded", actor: "Measurement system",     description: "Retention -3% vs predicted +5%. False positive mutes causing player frustration. Rollback recommended.", timestamp: daysAgo(17), evaluationId: "eval-006", parentLedgerId: "ledger-item-006", commitmentHash: "sha256:f7a2e4c91d3b860512e8f3a4...2d8c" }
     ),
   },
 ];

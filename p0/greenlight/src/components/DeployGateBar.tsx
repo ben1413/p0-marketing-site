@@ -1,6 +1,7 @@
 "use client";
 
 import { clsx } from "clsx";
+import { motion } from "framer-motion";
 import { LockClosedIcon, ArrowPathIcon } from "@heroicons/react/20/solid";
 import { describeDeployBlockReason } from "@/lib/plainLanguage";
 
@@ -33,7 +34,10 @@ export function DeployGateBar({
   const plainMessage = describeDeployBlockReason(errorString, details);
 
   return (
-    <div
+    <motion.div
+      initial={{ scaleX: 0, opacity: 0, originX: 0 }}
+      animate={{ scaleX: 1, opacity: 1 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className={clsx(
         "flex items-start gap-3 p-4 border rounded-xl",
         isFailed
@@ -42,12 +46,18 @@ export function DeployGateBar({
         className
       )}
     >
-      <LockClosedIcon
-        className={clsx(
-          "w-4 h-4 shrink-0 mt-0.5",
-          isFailed ? "text-red-400" : "text-amber-400"
-        )}
-      />
+      <motion.div
+        initial={{ rotate: -90, opacity: 0 }}
+        animate={{ rotate: 0, opacity: 1 }}
+        transition={{ delay: 0.25, duration: 0.3, ease: "easeOut" }}
+      >
+        <LockClosedIcon
+          className={clsx(
+            "w-4 h-4 shrink-0 mt-0.5",
+            isFailed ? "text-red-400" : "text-amber-400"
+          )}
+        />
+      </motion.div>
 
       <div className="flex-1 min-w-0">
         <p
@@ -83,6 +93,6 @@ export function DeployGateBar({
           {isSimulating ? "Running…" : "Re-run Simulation"}
         </button>
       )}
-    </div>
+    </motion.div>
   );
 }

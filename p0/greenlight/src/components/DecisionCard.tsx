@@ -15,12 +15,14 @@ import {
 import type { Decision } from "@/lib/types";
 import { SimulationChip } from "./SimulationChip";
 import { TrailEventList } from "./TrailEventList";
+import { ApprovalChain } from "./ApprovalChain";
 import {
   DECISION_STATUS_LABELS,
   DECISION_TYPE_LABELS,
   describeAuthorityMode,
   describeGovernanceTier,
   describeDeployBlockReason,
+  timeAgo,
 } from "@/lib/plainLanguage";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -132,12 +134,12 @@ export function DecisionCard({ decision }: Props) {
                 {describeAuthorityMode(decision.authorityMode)}
               </span>
             )}
-            <span className="text-xs text-zinc-600">
-              {new Date(decision.createdAt).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-              })}
+            <span className="text-xs text-zinc-600" title={new Date(decision.createdAt).toLocaleString()}>
+              {timeAgo(decision.createdAt)}
             </span>
+            {decision.expectedApprovers && decision.expectedApprovers.length > 0 && (
+              <ApprovalChain approvers={decision.expectedApprovers} compact />
+            )}
           </div>
 
           {/* Block reason */}

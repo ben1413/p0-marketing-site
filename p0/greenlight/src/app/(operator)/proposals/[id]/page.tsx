@@ -5,7 +5,9 @@ import { TrailEventList } from "@/components/TrailEventList";
 import { SimulationChip } from "@/components/SimulationChip";
 import { DeployGateBar } from "@/components/DeployGateBar";
 import { OutcomeCard } from "@/components/OutcomeCard";
+import { ApprovalChain } from "@/components/ApprovalChain";
 import { SimulationMethodologyCard } from "@/components/SimulationMethodologyCard";
+import { ProposalActionBar } from "@/components/ProposalActionBar";
 import { PageHeader } from "@/components/PageHeader";
 import {
   describeAuthorityMode,
@@ -13,6 +15,7 @@ import {
   describeRiskLevel,
   DECISION_TYPE_LABELS,
   DECISION_STATUS_LABELS,
+  timeAgo,
 } from "@/lib/plainLanguage";
 import { ArrowLeftIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import { clsx } from "clsx";
@@ -133,6 +136,16 @@ export default async function ProposalDetailPage({ params }: Props) {
         </div>
       )}
 
+      {/* Approval chain */}
+      {decision.expectedApprovers && decision.expectedApprovers.length > 0 && (
+        <div className="gl-card space-y-3">
+          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wide">
+            Approval chain
+          </p>
+          <ApprovalChain approvers={decision.expectedApprovers} />
+        </div>
+      )}
+
       {/* Outcome */}
       {decision.outcome && <OutcomeCard outcome={decision.outcome} />}
 
@@ -140,34 +153,17 @@ export default async function ProposalDetailPage({ params }: Props) {
       {decision.simulationScore && <SimulationMethodologyCard />}
 
       {/* Action bar */}
-      <div className="flex items-center gap-3 p-4 bg-zinc-900 border border-zinc-800 rounded-xl">
-        <p className="text-xs text-zinc-500 flex-1">Actions</p>
-        {canSimulate && (
-          <button className="gl-btn-secondary text-sm">
-            Run Simulation
-          </button>
-        )}
-        {canApprove && (
-          <button className="gl-btn-secondary text-sm">
-            Approve
-          </button>
-        )}
-        {canDeploy && (
-          <button className="gl-btn-primary text-sm">
-            Deploy
-          </button>
-        )}
-        {decision.status === "deployed" && (
-          <button className="px-3 py-1.5 bg-zinc-800 text-zinc-400 border border-zinc-700 rounded-lg text-xs hover:border-zinc-600 transition-colors">
-            Open Rollback
-          </button>
-        )}
-        {decision.status !== "proposed" &&
+      <ProposalActionBar
+        canSimulate={canSimulate}
+        canApprove={canApprove}
+        canDeploy={canDeploy}
+        isDeployed={decision.status === "deployed"}
+        showNoActions={
+          decision.status !== "proposed" &&
           decision.status !== "approved" &&
-          decision.status !== "deployed" && (
-          <span className="text-xs text-zinc-600 italic">No actions available for this status.</span>
-        )}
-      </div>
+          decision.status !== "deployed"
+        }
+      />
 
       {/* Proposed actions */}
       {decision.proposedActions && Object.keys(decision.proposedActions).length > 0 && (
@@ -191,8 +187,8 @@ export default async function ProposalDetailPage({ params }: Props) {
 
       {/* Meta */}
       <div className="text-xs text-zinc-600 pb-8">
-        Created {new Date(decision.createdAt).toLocaleString()} ·
-        Updated {new Date(decision.updatedAt).toLocaleString()}
+        Created {timeAgo(decision.createdAt)} ·
+        Updated {timeAgo(decision.updatedAt)}
         {decision.deploymentId && ` · Deploy ID: ${decision.deploymentId}`}
       </div>
     </div>

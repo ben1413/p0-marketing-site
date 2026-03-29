@@ -1,9 +1,6 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  // Core API calls are server-side only — never expose keys to the browser
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   env: {},
-  // Headers for security
   async headers() {
     return [
       {

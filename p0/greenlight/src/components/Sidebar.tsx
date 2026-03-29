@@ -20,18 +20,20 @@ const nav = [
   {
     section: "Operations",
     items: [
-      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/proposals", label: "Proposals", icon: GitPullRequest },
-      { href: "/deploys", label: "Deploys", icon: Rocket },
-      { href: "/experiments", label: "Experiments", icon: FlaskConical },
+      { href: "/dashboard",  label: "Dashboard",    icon: LayoutDashboard },
+      { href: "/proposals",  label: "Proposals",    icon: GitPullRequest },
+      { href: "/deploys",    label: "Deploys",      icon: Rocket },
+      { href: "/experiments",label: "Experiments",  icon: FlaskConical },
     ],
   },
   {
     section: "Trust",
     items: [
-      { href: "/incidents", label: "Incidents", icon: ShieldAlert },
-      { href: "/moderation", label: "Moderation", icon: Users },
-      { href: "/activity", label: "Audit Log", icon: Activity },
+      { href: "/incidents",       label: "Incidents",       icon: ShieldAlert },
+      { href: "/moderation",      label: "Moderation",      icon: Users },
+      { href: "/activity",        label: "Audit Log",       icon: Activity },
+      { href: "/story",           label: "Proof Story",     icon: Zap },
+      { href: "/why-not-build",   label: "Why Not Build?",  icon: ChevronDown },
     ],
   },
 ];

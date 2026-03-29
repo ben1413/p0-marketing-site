@@ -37,7 +37,7 @@
 
 @layer components {
   .gl-card {
-    @apply bg-zinc-900 border border-zinc-800 rounded-xl;
+    @apply bg-zinc-900 border border-zinc-800 rounded-xl p-4;
   }
 
   .gl-badge {
@@ -66,5 +66,67 @@
 
   .gl-label {
     @apply text-xs font-medium text-zinc-400 uppercase tracking-wider;
+  }
+}
+
+/* Print / PDF export — clean white output for Governance Audit */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background: white !important;
+    color: #111 !important;
+  }
+
+  /* Hide interactive UI chrome */
+  nav,
+  aside,
+  .no-print,
+  [data-sidebar],
+  [data-nav] {
+    display: none !important;
+  }
+
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Render dark cards as white */
+  .gl-card,
+  table,
+  thead,
+  tbody,
+  tr,
+  th,
+  td {
+    background: white !important;
+    border-color: #e4e4e7 !important;
+    color: #18181b !important;
+  }
+
+  th {
+    font-weight: 600;
+    color: #52525b !important;
+  }
+
+  /* Page break control */
+  tr {
+    page-break-inside: avoid;
+  }
+
+  a {
+    color: #18181b !important;
+    text-decoration: none !important;
+  }
+}
+
+/* Hide print-only elements in screen mode */
+@media screen {
+  .print-only {
+    display: none;
   }
 }

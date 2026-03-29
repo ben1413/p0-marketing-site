@@ -14,21 +14,23 @@ type CircuitBreakBannerProps = {
 
 const PLAIN_MESSAGES: Record<string, string> = {
   AGENT_HALTED:
-    "This agent has been halted by an administrator and cannot respond right now.",
+    "Halted by an administrator. Cannot respond until manually resumed.",
   AGENT_SUSPENDED:
-    "This agent is suspended pending review. A team member needs to resume it before it can respond.",
+    "Suspended pending review. A team member needs to resume this agent.",
   AGENT_DISABLED:
-    "This agent is currently disabled.",
+    "Currently disabled.",
+  AGENT_COOLING_DOWN:
+    "Cooling down after a circuit break. Will auto-recover shortly, or an admin can resume immediately.",
   AGENT_TOKEN_CAP_EXCEEDED:
-    "Agent stopped — exceeded its token limit for this session. This prevents runaway costs.",
+    "Exceeded session token limit. Stopped to prevent runaway costs.",
   AGENT_RATE_LIMITED:
-    "Agent paused — too many requests in a short period. Try again in a minute.",
+    "Too many requests in a short period. Try again in a minute.",
   AGENT_GOVERNANCE_BLOCKED:
-    "Agent blocked by a governance rule. Check your project's governance settings for details.",
+    "Blocked by a governance rule. Check project governance settings.",
   AGENT_EVAL_SCORE_TOO_LOW:
-    "Agent suspended — its evaluation score dropped below the safe threshold. A human review is needed.",
+    "Evaluation score dropped below safe threshold. Human review needed.",
   AGENT_CASCADING_RISK:
-    "Agent blocked — a teammate agent was recently stopped for safety reasons, so downstream work is paused until the situation is reviewed.",
+    "A teammate agent was recently stopped for safety. Downstream work paused until reviewed.",
 };
 
 function humanReadable(code?: string, reason?: string): string {
@@ -39,7 +41,7 @@ function humanReadable(code?: string, reason?: string): string {
 
 export function CircuitBreakBanner({ code, reason, agentName, onDismiss }: CircuitBreakBannerProps) {
   const message = humanReadable(code, reason);
-  const label = agentName ? `${agentName} — stopped` : "Agent stopped";
+  const label = agentName || "Agent";
 
   return (
     <div className="mx-4 mt-3 shrink-0 rounded-xl border border-red-500/25 bg-red-500/5 px-4 py-3 flex items-start gap-3">
